@@ -9,9 +9,9 @@ export function PartnersSection() {
       <div className="mx-auto max-w-6xl text-center">
         <p className="text-xs font-medium uppercase tracking-wide text-white/55">Autoryzowany partner</p>
 
-        <ul className="mx-auto mt-3 grid max-w-sm grid-cols-2 gap-x-4 gap-y-2.5 text-xs font-medium leading-snug text-white/80 sm:max-w-md sm:text-sm md:hidden">
+        <ul className="mx-auto mt-3 flex max-w-[18rem] flex-wrap justify-center gap-x-3 gap-y-2 text-xs font-medium text-white/80 sm:max-w-md sm:text-sm md:hidden">
           {PARTNERS.map((partner) => (
-            <li key={partner} className="text-center">
+            <li key={partner} className="whitespace-nowrap">
               {partner}
             </li>
           ))}
