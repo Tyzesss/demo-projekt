@@ -6,6 +6,7 @@ import {
   GOOGLE_REVIEWS_URL,
   HAS_STREET_ADDRESS,
   PHONE_E164,
+  SCHEMA_TYPE,
   SERVICES,
   SITE_CITY,
   SITE_DESCRIPTION,
@@ -35,7 +36,7 @@ export function localBusinessJsonLd() {
 
   return {
     "@context": "https://schema.org",
-    "@type": "HVACBusiness",
+    "@type": SCHEMA_TYPE,
     name: SITE_NAME,
     legalName: COMPANY_LEGAL_NAME,
     description: SITE_DESCRIPTION,

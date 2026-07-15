@@ -70,6 +70,8 @@ import {
   SERVICES,
   FAQS,
   SERVICE_OPTION_GROUPS,
+  SECTIONS,
+  SECTION_TITLES,
 } from "@/lib/site";
 import type { ServiceIcon, ServiceItem } from "@/lib/presets";
 
@@ -91,12 +93,12 @@ export const Route = createFileRoute("/")({
 
 const NAV_LINKS = [
   { href: "#uslugi", label: "Usługi" },
-  { href: "#jak-dzialamy", label: "Jak to działa" },
-  { href: "#opinie", label: "Opinie" },
-  { href: "#realizacje", label: "Realizacje" },
-  { href: "#faq", label: "FAQ" },
+  ...(SECTIONS.howItWorks ? [{ href: "#jak-dzialamy", label: "Jak to działa" }] : []),
+  ...(SECTIONS.reviews ? [{ href: "#opinie", label: "Opinie" }] : []),
+  ...(SECTIONS.gallery ? [{ href: "#realizacje", label: "Realizacje" }] : []),
+  ...(SECTIONS.faq ? [{ href: "#faq", label: "FAQ" }] : []),
   { href: "#kontakt", label: "Kontakt" },
-] as const;
+];
 
 const SERVICE_ICONS: Record<ServiceIcon, typeof Wrench> = {
   wrench: Wrench,
@@ -153,9 +155,6 @@ function CTAButton({ className = "" }: { className?: string }) {
     </a>
   );
 }
-
-const FORM_HEADLINE = "Nie możesz się skontaktować?";
-const FORM_SUBLINE = "Zostaw numer, oddzwonimy do Ciebie.";
 
 function LeadForm() {
   const [service, setService] = useState("");
@@ -521,8 +520,18 @@ function Index() {
           id="top"
           className="relative z-10 scroll-mt-24 px-4 pt-6 pb-12 text-foreground max-md:min-h-[36rem] md:min-h-[34rem] md:pt-12 md:pb-16"
         >
-        <div className="relative mx-auto max-w-6xl md:grid md:grid-cols-2 md:gap-12 md:items-center">
-          <div className="flex flex-col items-center text-center md:items-start md:text-left">
+        <div
+          className={cn(
+            "relative mx-auto max-w-6xl md:items-center",
+            SECTIONS.contactForm ? "md:grid md:grid-cols-2 md:gap-12" : "md:text-center",
+          )}
+        >
+          <div
+            className={cn(
+              "flex flex-col items-center text-center",
+              SECTIONS.contactForm ? "md:items-start md:text-left" : "md:mx-auto md:max-w-2xl",
+            )}
+          >
             <div className="hero-enter hero-enter-delay-0 order-1 flex justify-center md:order-3 md:mt-3 md:justify-start">
               <HeroGoogleRating
                 rating={googleReviews.rating}
@@ -556,20 +565,22 @@ function Index() {
             </div>
           </div>
 
-          <div className="hero-enter hero-enter-delay-7 panel-glass mt-5 w-full rounded-2xl p-5 text-center max-md:[&_form]:text-left md:mt-0 md:text-left">
-            <p className="text-sm font-semibold text-white">{FORM_HEADLINE}</p>
-            <p className="mt-1 text-xs text-white/75">{FORM_SUBLINE}</p>
-            <div className="mt-4">
-              <LeadForm />
+          {SECTIONS.contactForm ? (
+            <div className="hero-enter hero-enter-delay-7 panel-glass mt-5 w-full rounded-2xl p-5 text-center max-md:[&_form]:text-left md:mt-0 md:text-left">
+              <p className="text-sm font-semibold text-white">{SECTION_TITLES.formHeadline}</p>
+              <p className="mt-1 text-xs text-white/75">{SECTION_TITLES.formSubline}</p>
+              <div className="mt-4">
+                <LeadForm />
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
         </section>
 
         <Section
           id="uslugi"
-          eyebrow="Usługi"
-          title="Nasze usługi"
+          eyebrow={SECTION_TITLES.servicesEyebrow}
+          title={SECTION_TITLES.servicesTitle}
           subtitle={SERVICES_SECTION_SUBTITLE}
           glow={{ x: "22%", y: "58%", strength: 0.035 }}
         >
@@ -580,44 +591,48 @@ function Index() {
             ))}
           </div>
 
-          <div className="mt-8">
-            <PartnersSection />
-          </div>
+          {SECTIONS.partners ? (
+            <div className="mt-8">
+              <PartnersSection />
+            </div>
+          ) : null}
         </Section>
       </div>
 
-      <HowItWorks />
+      {SECTIONS.howItWorks ? <HowItWorks /> : null}
 
-      {/* REVIEWS */}
-      <Section
-        id="opinie"
-        eyebrow="Opinie Google"
-        title="Opinie klientów"
-        subtitle="Sprawdzone recenzje z profilu Google Maps. Możesz je zweryfikować jednym kliknięciem."
-        glow={{ x: "78%", y: "36%", cyan: true }}
-      >
-        <GoogleReviewsSection data={googleReviews} />
-      </Section>
+      {SECTIONS.reviews ? (
+        <Section
+          id="opinie"
+          eyebrow={SECTION_TITLES.reviewsEyebrow}
+          title={SECTION_TITLES.reviewsTitle}
+          subtitle={SECTION_TITLES.reviewsSubtitle}
+          glow={{ x: "78%", y: "36%", cyan: true }}
+        >
+          <GoogleReviewsSection data={googleReviews} />
+        </Section>
+      ) : null}
 
-      {/* GALLERY */}
-      <Section
-        id="realizacje"
-        panel
-        eyebrow="Portfolio"
-        title="Nasze realizacje"
-        subtitle={GALLERY_SECTION_SUBTITLE}
-        glow={{ x: "44%", y: "48%" }}
-      >
-        <GallerySection />
-      </Section>
+      {SECTIONS.gallery ? (
+        <Section
+          id="realizacje"
+          panel
+          eyebrow={SECTION_TITLES.galleryEyebrow}
+          title={SECTION_TITLES.galleryTitle}
+          subtitle={GALLERY_SECTION_SUBTITLE}
+          glow={{ x: "44%", y: "48%" }}
+        >
+          <GallerySection />
+        </Section>
+      ) : null}
 
-      {/* FAQ */}
-      <Section
-        id="faq"
-        eyebrow="FAQ"
-        title="Najczęstsze pytania"
-        subtitle="Odpowiedzi na pytania o przeglądy, naprawy, wycenę i dojazd do klienta."
-      >
+      {SECTIONS.faq ? (
+        <Section
+          id="faq"
+          eyebrow={SECTION_TITLES.faqEyebrow}
+          title={SECTION_TITLES.faqTitle}
+          subtitle={SECTION_TITLES.faqSubtitle}
+        >
         <Reveal>
           <div className="card-glass mx-auto max-w-3xl rounded-xl px-2 md:px-4">
             <Accordion type="single" collapsible className="w-full text-left">
@@ -633,6 +648,7 @@ function Index() {
           </div>
         </Reveal>
       </Section>
+      ) : null}
 
       {/* KONTAKT + WYCENA */}
       <section
@@ -648,20 +664,28 @@ function Index() {
           <div id="wycena" className="scroll-mt-24">
             <div className="panel-glass rounded-2xl p-5 md:hidden">
               <Reveal className="text-center">
-                <p className="section-eyebrow">Kontakt</p>
-                <h2 className="mt-1.5 text-2xl font-bold tracking-tight text-white">Skontaktuj się z nami</h2>
-                <p className="mt-1.5 text-sm leading-relaxed text-white/75">Zadzwoń, napisz lub zostaw numer.</p>
+                <p className="section-eyebrow">{SECTION_TITLES.contactEyebrow}</p>
+                <h2 className="mt-1.5 text-2xl font-bold tracking-tight text-white">
+                  {SECTION_TITLES.contactTitle}
+                </h2>
+                <p className="mt-1.5 text-sm leading-relaxed text-white/75">
+                  {SECTION_TITLES.contactSubtitle}
+                </p>
               </Reveal>
 
-              <Reveal delay={80} className="mt-6">
-                <p className="text-sm font-semibold text-white">{FORM_HEADLINE}</p>
-                <p className="mt-1 text-xs text-white/75">{FORM_SUBLINE}</p>
-                <div className="mt-4 [&_form]:text-left">
-                  <LeadForm />
-                </div>
-              </Reveal>
+              {SECTIONS.contactForm ? (
+                <>
+                  <Reveal delay={80} className="mt-6">
+                    <p className="text-sm font-semibold text-white">{SECTION_TITLES.formHeadline}</p>
+                    <p className="mt-1 text-xs text-white/75">{SECTION_TITLES.formSubline}</p>
+                    <div className="mt-4 [&_form]:text-left">
+                      <LeadForm />
+                    </div>
+                  </Reveal>
 
-              <div className="my-6 h-px bg-white/10" aria-hidden />
+                  <div className="my-6 h-px bg-white/10" aria-hidden />
+                </>
+              ) : null}
 
               <div className="flex flex-col gap-3">
                 {contactCards.map((c, i) => (
@@ -672,26 +696,38 @@ function Index() {
 
             <div className="panel-glass mx-auto hidden max-w-4xl rounded-2xl p-5 md:block md:p-8 lg:p-10">
               <Reveal className="text-center">
-                <p className="section-eyebrow">Kontakt</p>
-                <h2 className="mt-1.5 text-4xl font-bold tracking-tight text-white">Skontaktuj się z nami</h2>
-                <p className="mt-1.5 text-base leading-relaxed text-white/75">Zadzwoń, napisz lub zostaw numer.</p>
+                <p className="section-eyebrow">{SECTION_TITLES.contactEyebrow}</p>
+                <h2 className="mt-1.5 text-4xl font-bold tracking-tight text-white">
+                  {SECTION_TITLES.contactTitle}
+                </h2>
+                <p className="mt-1.5 text-base leading-relaxed text-white/75">
+                  {SECTION_TITLES.contactSubtitle}
+                </p>
               </Reveal>
 
-              <div className="mx-auto mt-8 grid w-full md:grid-cols-[minmax(0,26rem)_minmax(0,24rem)] md:items-stretch md:justify-center md:gap-7 lg:mt-10 lg:gap-8">
-                <Reveal className="h-full text-left">
-                  <p className="text-sm font-semibold text-white">{FORM_HEADLINE}</p>
-                  <p className="mt-1 text-xs text-white/75">{FORM_SUBLINE}</p>
-                  <div className="mt-4 flex flex-1 flex-col">
-                    <LeadForm />
-                  </div>
-                </Reveal>
+              {SECTIONS.contactForm ? (
+                <div className="mx-auto mt-8 grid w-full md:grid-cols-[minmax(0,26rem)_minmax(0,24rem)] md:items-stretch md:justify-center md:gap-7 lg:mt-10 lg:gap-8">
+                  <Reveal className="h-full text-left">
+                    <p className="text-sm font-semibold text-white">{SECTION_TITLES.formHeadline}</p>
+                    <p className="mt-1 text-xs text-white/75">{SECTION_TITLES.formSubline}</p>
+                    <div className="mt-4 flex flex-1 flex-col">
+                      <LeadForm />
+                    </div>
+                  </Reveal>
 
-                <div className="flex h-full min-h-0 flex-col gap-3">
+                  <div className="flex h-full min-h-0 flex-col gap-3">
+                    {contactCards.map((c, i) => (
+                      <ContactCard key={c.title} c={c} index={i} compact stretch />
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="mx-auto mt-8 grid w-full max-w-md gap-3">
                   {contactCards.map((c, i) => (
                     <ContactCard key={c.title} c={c} index={i} compact stretch />
                   ))}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

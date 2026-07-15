@@ -1,35 +1,33 @@
 import type { CSSProperties } from "react";
-import { Calendar, ClipboardCheck, Phone } from "lucide-react";
+import { Calendar, ClipboardCheck, Phone, type LucideIcon } from "lucide-react";
 
 import { Reveal } from "@/components/Reveal";
 import { useReveal } from "@/hooks/use-reveal";
+import {
+  HOW_IT_WORKS_STEPS,
+  SECTION_TITLES,
+} from "@/lib/site";
+import type { HowItWorksStepIcon } from "@/lib/presets";
 import { cn } from "@/lib/utils";
 
-const STEPS = [
-  {
-    step: 1,
-    icon: Phone,
-    title: "Zgłoszenie",
-    desc: "Zadzwoń, napisz na WhatsApp lub zostaw numer w formularzu. Oddzwonimy z propozycją terminu.",
-    descShort: "Telefon, WhatsApp lub formularz. Oddzwonimy z terminem.",
-  },
-  {
-    step: 2,
-    icon: Calendar,
-    title: "Ustalenie terminu",
-    desc: "Doprecyzujemy zakres prac (montaż, serwis, wycena) i ustalimy dogodny termin wizyty.",
-    descShort: "Ustalimy zakres prac i termin wizyty.",
-  },
-  {
-    step: 3,
-    icon: ClipboardCheck,
-    title: "Realizacja u klienta",
-    desc: "Dojazd na miejsce: montaż, przegląd lub naprawa. Koszt i zakres potwierdzamy przed rozpoczęciem prac.",
-    descShort: "Montaż lub serwis na miejscu. Wycena przed startem prac.",
-  },
-] as const;
+const STEP_ICONS: Record<HowItWorksStepIcon, LucideIcon> = {
+  phone: Phone,
+  calendar: Calendar,
+  "clipboard-check": ClipboardCheck,
+};
 
-type Step = (typeof STEPS)[number];
+type ResolvedStep = {
+  step: number;
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+  descShort: string;
+};
+
+const STEPS: ResolvedStep[] = HOW_IT_WORKS_STEPS.map((step) => ({
+  ...step,
+  icon: STEP_ICONS[step.icon],
+}));
 
 function StepContent({
   icon: Icon,
@@ -37,7 +35,7 @@ function StepContent({
   desc,
   descShort,
   compact,
-}: Pick<Step, "icon" | "title" | "desc" | "descShort"> & { compact?: boolean }) {
+}: Pick<ResolvedStep, "icon" | "title" | "desc" | "descShort"> & { compact?: boolean }) {
   return (
     <>
       <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-brand-cyan">
@@ -73,7 +71,7 @@ function DesktopTimelineCard({
   title,
   desc,
   index,
-}: Pick<Step, "icon" | "title" | "desc"> & { index: number }) {
+}: Pick<ResolvedStep, "icon" | "title" | "desc"> & { index: number }) {
   const { ref, className: revealClass } = useReveal<HTMLDivElement>();
 
   return (
@@ -121,10 +119,12 @@ export function HowItWorks() {
       <div className="relative mx-auto max-w-6xl">
         <div className="panel-glass rounded-2xl p-5 text-center md:p-8 lg:p-10">
           <Reveal>
-            <p className="section-eyebrow">Proces</p>
-            <h2 className="mt-1.5 text-xl font-bold text-white md:mt-2 md:text-3xl">Jak to działa?</h2>
+            <p className="section-eyebrow">{SECTION_TITLES.howItWorksEyebrow}</p>
+            <h2 className="mt-1.5 text-xl font-bold text-white md:mt-2 md:text-3xl">
+              {SECTION_TITLES.howItWorksTitle}
+            </h2>
             <p className="mx-auto mt-1.5 max-w-xl text-xs text-white/75 md:mt-2 md:text-base">
-              Od zgłoszenia do gotowej realizacji: montaż, serwis lub przegląd.
+              {SECTION_TITLES.howItWorksSubtitle}
             </p>
           </Reveal>
 

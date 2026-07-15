@@ -38,9 +38,73 @@ export type FormOptionGroup = {
   options: string[];
 };
 
+export type HvacProfile =
+  | "klimatyzacja"
+  | "pompy-ciepla"
+  | "kotly-ogrzewanie"
+  | "wentylacja"
+  | "mix-hvac"
+  | "serwis-awaryjny";
+
+export type SchemaType = "HVACBusiness" | "LocalBusiness";
+
+export type HowItWorksStepIcon = "phone" | "calendar" | "clipboard-check";
+
+export type HowItWorksStep = {
+  step: number;
+  icon: HowItWorksStepIcon;
+  title: string;
+  desc: string;
+  descShort: string;
+};
+
+export type SectionConfig = {
+  partners: boolean;
+  gallery: boolean;
+  reviews: boolean;
+  howItWorks: boolean;
+  faq: boolean;
+  contactForm: boolean;
+};
+
+export type SectionTitles = {
+  servicesEyebrow: string;
+  servicesTitle: string;
+  reviewsEyebrow: string;
+  reviewsTitle: string;
+  reviewsSubtitle: string;
+  galleryEyebrow: string;
+  galleryTitle: string;
+  faqEyebrow: string;
+  faqTitle: string;
+  faqSubtitle: string;
+  howItWorksEyebrow: string;
+  howItWorksTitle: string;
+  howItWorksSubtitle: string;
+  contactEyebrow: string;
+  contactTitle: string;
+  contactSubtitle: string;
+  formHeadline: string;
+  formSubline: string;
+};
+
+export type BrandColors = {
+  brandTeal?: string;
+  brandCyan?: string;
+  cta?: string;
+  ctaHover?: string;
+};
+
 export type SitePreset = {
   id: string;
   label: string;
+  hvacProfile: HvacProfile;
+  schemaType: SchemaType;
+  sections: SectionConfig;
+  sectionTitles: SectionTitles;
+  howItWorksSteps: HowItWorksStep[];
+  whatsappPrefillMessage: string;
+  brandColors?: BrandColors;
   siteName: string;
   companyLegalName: string;
   siteCity: string;
@@ -53,7 +117,7 @@ export type SitePreset = {
   addressStreet: string;
   addressCity: string;
   addressPostal: string;
-  /** Gdy brak siedziby — tekst zamiast adresu, np. „Miasto i okolice — dojazd do klienta”. */
+  /** Gdy brak siedziby — tekst zamiast adresu, np. „Miasto i okolice, dojazd do klienta”. */
   serviceArea?: string;
   mapsQuery: string;
   mapsUrl?: string;

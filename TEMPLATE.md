@@ -42,18 +42,37 @@ Zanim skopiujesz `default.ts`, ustal profil firmy:
 ## Architektura
 
 ```
-.env (VITE_CITY_PRESET, VITE_SITE_URL)
+.env (VITE_SITE_PRESET, VITE_SITE_URL)
         ↓
-src/lib/presets/klient.ts   ← JEDYNY plik do edycji treści
+src/lib/presets/klient.ts   ← JEDYNY plik do edycji treści i konfiguracji
         ↓
 src/lib/site.ts             ← eksport stałych (nie edytuj)
         ↓
 komponenty + strony         ← layout (nie edytuj)
 ```
 
+### Szybki start nowego klienta
+
+```bash
+npm run new-preset firma-krakow
+```
+
+Potem edytuj `src/lib/presets/firma-krakow.ts` i ustaw `VITE_SITE_PRESET=firma-krakow`.
+
+### Wzorce profili HVAC
+
+Zamiast `default.ts` możesz skopiować gotowy wzorzec:
+
+| Plik | Profil |
+|------|--------|
+| `vertical-klimatyzacja.ts` | Klimatyzacja |
+| `vertical-pompy-ciepla.ts` | Pompy ciepła |
+| `vertical-kotly.ts` | Kotły i ogrzewanie |
+| `vertical-mix-hvac.ts` | Mix HVAC |
+
 ## Krok 1 — Nowy preset klienta
 
-1. Skopiuj `src/lib/presets/default.ts` → `src/lib/presets/nazwa-klienta.ts`
+1. `npm run new-preset nazwa-klienta` **lub** skopiuj `default.ts` / `vertical-*.ts` → `src/lib/presets/nazwa-klienta.ts`
 2. Zmień `id` i `label` na unikalne (np. `firma-krakow`)
 3. Uzupełnij wszystkie pola — poniżej opis każdej sekcji
 
@@ -157,9 +176,11 @@ W `.env` (lokalnie) i Vercel (produkcja):
 
 ```env
 VITE_SITE_URL=https://domena-klienta.pl
-VITE_CITY_PRESET=firma-krakow
+VITE_SITE_PRESET=firma-krakow
 VITE_WEB3FORMS_ACCESS_KEY=klucz_z_web3forms
 ```
+
+`VITE_CITY_PRESET` nadal działa (deprecated).
 
 ## Krok 4 — Assety
 

@@ -1,100 +1,137 @@
-import type { SitePreset } from "./types";
+import { withPresetDefaults } from "./shared";
 
-const siteCity = "Twoje Miasto i okolice";
-const cityLocative = "w Twoim Mieście";
-const siteName = "Instalacje HVAC";
+const siteCity = "Kraków i okolice";
+const cityLocative = "w Krakowie";
+const siteName = "KLIMATPRO";
 
-export const defaultPreset: SitePreset = {
+/** Demo lidera branży — gotowa wizytówka matki KLIMATPRO do podglądu i klonowania pod klienta. */
+export const defaultPreset = withPresetDefaults({
   id: "default",
-  label: "Szablon domyślny",
+  label: "Demo — KLIMATPRO Kraków",
+  hvacProfile: "mix-hvac",
   siteName,
-  companyLegalName: "Instalacje HVAC Jan Kowalski",
+  companyLegalName: "KLIMATPRO Instalacje Sp. z o.o.",
   siteCity,
   cityLocative,
-  siteDefaultUrl: "https://twoja-domena.pl",
-  email: "kontakt@twoja-domena.pl",
-  phoneDisplay: "600 000 000",
-  phoneE164: "+48600000000",
-  address: "",
-  addressStreet: "",
-  addressCity: "Twoje Miasto",
-  addressPostal: "",
-  serviceArea: "Twoje Miasto i okolice, dojazd do klienta",
-  mapsQuery: "Instalacje HVAC Twoje Miasto",
-  nip: "000-000-00-00",
-  regon: "000000000",
+  siteDefaultUrl: "https://klimatpro-demo.pl",
+  email: "kontakt@klimatpro.pl",
+  phoneDisplay: "12 654 32 10",
+  phoneE164: "+48126543210",
+  address: "ul. Instalatorska 12, 30-001 Kraków",
+  addressStreet: "ul. Instalatorska 12",
+  addressCity: "Kraków",
+  addressPostal: "30-001",
+  serviceArea: "Kraków i okolice, dojazd do klienta",
+  mapsQuery: "KLIMATPRO Kraków klimatyzacja HVAC",
+  nip: "678-000-12-34",
+  regon: "123456789",
   hours: "Pn - Pt: 8:00 - 17:00",
-  logoUrl: "/logo.svg",
-  logoIncludesName: false,
-  faviconUrl: "/favicon.svg",
-  heroImage: "/gallery/placeholder-1.svg",
-  siteTitle: `Klimatyzacja i HVAC ${siteCity} | ${siteName}`,
+  logoUrl: "/logo.png",
+  logoIncludesName: true,
+  faviconUrl: "/favicon.png",
+  heroImage: "/gallery/hero-pompa-ciepla.webp",
+  siteTitle: `Klimatyzacja ${siteCity} | ${siteName}`,
   siteKeywords:
-    "klimatyzacja, montaż klimatyzacji, serwis HVAC, pompy ciepła, wentylacja, rekuperacja, serwis kotłów, naprawa awaryjna",
-  siteDescription: `Montaż i serwis klimatyzacji, pomp ciepła, wentylacji oraz urządzeń grzewczych ${cityLocative} i okolicach. Dojazd do klienta. Zadzwoń: 600 000 000.`,
-  ogImage: "/gallery/placeholder-1.svg",
+    "klimatyzacja Kraków, pompy ciepła, montaż klimatyzacji, serwis HVAC, serwis kotłów, rekuperacja",
+  siteDescription: `Montaż i serwis klimatyzacji, pomp ciepła i instalacji HVAC ${cityLocative} i okolicach. Dojazd do klienta. Zadzwoń: 12 654 32 10.`,
+  ogImage: "/gallery/hero-pompa-ciepla.webp",
   googleRating: 4.9,
-  googleReviewCount: 24,
-  partners: ["Daikin", "Mitsubishi", "Gree", "Bosch", "Vaillant", "Samsung"],
+  googleReviewCount: 47,
+  partners: ["Daikin", "Mitsubishi Electric", "Vaillant", "Bosch", "Buderus", "Samsung"],
   gallery: [
     {
-      image: "/gallery/placeholder-1.svg",
-      alt: "Montaż klimatyzacji split, realizacja instalacyjna",
-      caption: "Montaż klimatyzacji",
+      image: "/gallery/klima-01.webp",
+      alt: "Montaż klimatyzacji w biurze, realizacja KLIMATPRO Kraków",
+      caption: "Klimatyzacja biurowa",
     },
     {
-      image: "/gallery/placeholder-2.svg",
-      alt: "Serwis pompy ciepła, diagnostyka i konserwacja",
-      caption: "Serwis pompy ciepła",
+      image: "/gallery/klima-02.webp",
+      alt: "Montaż klimatyzacji w mieszkaniu 60 m², Kraków",
+      caption: "Klimatyzacja w mieszkaniu",
     },
     {
-      image: "/gallery/placeholder-3.svg",
-      alt: "Instalacja rekuperacji, wentylacja mechaniczna",
-      caption: "Rekuperacja",
+      image: "/gallery/klima-03.webp",
+      alt: "Instalacja klimatyzacji domowej, realizacja Kraków",
+      caption: "Klimatyzacja domowa",
     },
     {
-      image: "/gallery/placeholder-4.svg",
-      alt: "Przegląd i serwis kotła gazowego, konserwacja",
-      caption: "Serwis ogrzewania",
-    },
-    {
-      image: "/gallery/placeholder-5.svg",
-      alt: "Montaż klimatyzacji w budynku komercyjnym",
+      image: "/gallery/klima-04.webp",
+      alt: "Montaż klimatyzacji w lokalu użytkowym, Kraków",
       caption: "Klimatyzacja komercyjna",
+    },
+    {
+      image: "/gallery/klima-05.webp",
+      alt: "Montaż jednostek klimatyzacji split, serwis HVAC",
+      caption: "Montaż klimatyzacji split",
+    },
+    {
+      image: "/gallery/biuro-centrum.webp",
+      alt: "Montaż klimatyzacji w biurze w centrum Krakowa",
+      caption: "Klimatyzacja w biurze",
+    },
+    {
+      image: "/gallery/pompy-01.webp",
+      alt: "Instalacja pompy ciepła, realizacja KLIMATPRO",
+      caption: "Montaż pompy ciepła",
+    },
+    {
+      image: "/gallery/pompy-02.webp",
+      alt: "Kocioł gazowy kondensacyjny, instalacja grzewcza Kraków",
+      caption: "Kocioł kondensacyjny",
+    },
+    {
+      image: "/gallery/pompy-03.webp",
+      alt: "Serwis i montaż urządzeń grzewczych Termet",
+      caption: "Instalacja grzewcza",
+    },
+    {
+      image: "/gallery/pompy-04.webp",
+      alt: "Montaż pompy ciepła powietrze-woda, Kraków i okolice",
+      caption: "Pompa ciepła powietrze-woda",
+    },
+    {
+      image: "/gallery/pompy-05.webp",
+      alt: "Pompa ciepła na elewacji budynku, realizacja montażowa",
+      caption: "Pompa ciepła na elewacji",
+    },
+    {
+      image: "/gallery/pompy-06.webp",
+      alt: "Konfiguracja i uruchomienie pompy ciepła, serwis HVAC",
+      caption: "Uruchomienie pompy ciepła",
     },
   ],
   reviews: [
     {
-      name: "Anna K.",
-      text: "Szybka reakcja i fachowa obsługa. Polecam każdemu, kto szuka solidnego serwisu w okolicy.",
+      name: "Marek K.",
+      text: "Montaż klimatyzacji w domu zrobiony sprawnie i czytelnie. Ekipa punktualna, po pracy porządek na miejscu.",
       source: "google",
       rating: 5,
       relativeTime: "2 mies. temu",
     },
     {
-      name: "Marek W.",
-      text: "Profesjonalna ekipa. Przyjechali na czas, wszystko działa idealnie po naprawie.",
+      name: "Anna W.",
+      text: "Serwis pompy ciepła po sezonie grzewczym. Konkretna diagnostyka i sensowne wytłumaczenie, co zostało zrobione.",
       source: "google",
       rating: 5,
       relativeTime: "3 mies. temu",
     },
     {
-      name: "Justyna P.",
-      text: "Konkretna wycena i super doradztwo przy wyborze rozwiązania. Bardzo polecam.",
+      name: "Tomasz R.",
+      text: "Awaria kotła w zimie, szybka reakcja i naprawa tego samego dnia. Polecam na serwis ogrzewania.",
       source: "google",
       rating: 5,
       relativeTime: "4 mies. temu",
     },
     {
-      name: "Tomasz L.",
-      text: "Świetny serwis. Po roku zrobili przegląd, wszystko jak nowe.",
+      name: "Karolina S.",
+      text: "Montaż rekuperacji w nowym domu. Dobre doradztwo przy doborze mocy i termin dotrzymany.",
       source: "google",
       rating: 5,
       relativeTime: "5 mies. temu",
     },
     {
-      name: "Karolina M.",
-      text: "Polecam! Konkretni, kulturalni i bardzo szybcy. Pełne zadowolenie z usługi.",
+      name: "Piotr L.",
+      text: "Klimatyzacja w lokalu firmowym. Fachowo, bez zbędnego czekania. Kontakt telefoniczny bez problemu.",
       source: "google",
       rating: 5,
       relativeTime: "6 mies. temu",
@@ -103,12 +140,12 @@ export const defaultPreset: SitePreset = {
   heroHeadline: "Montaż i serwis instalacji HVAC",
   heroBullets: [
     "Klimatyzacja, pompy ciepła, wentylacja i ogrzewanie. Od montażu po serwis.",
-    "Obsługa gwarancyjna i pogwarancyjna z dojazdem do klienta.",
+    "Dojazd do klienta na terenie Krakowa i okolic. Termin ustalamy telefonicznie.",
   ],
   footerTagline: "Klimatyzacja, pompy ciepła i HVAC",
   servicesSectionSubtitle:
     "Montaż, serwis i przeglądy klimatyzacji, pomp ciepła, wentylacji oraz urządzeń grzewczych.",
-  gallerySectionSubtitle: "Wybrane realizacje montażowe i serwisowe w Twojej okolicy.",
+  gallerySectionSubtitle: "Realizacje montażowe i serwisowe KLIMATPRO w Krakowie i okolicach.",
   services: [
     {
       icon: "check-circle",
@@ -138,10 +175,9 @@ export const defaultPreset: SitePreset = {
     {
       icon: "alert-triangle",
       title: "Naprawa awaryjna HVAC",
-      desc: "Szybka reakcja przy awarii klimatyzacji, pompy lub ogrzewania. Termin potwierdzamy telefonicznie.",
+      desc: "Szybka reakcja przy awarii klimatyzacji, pompy lub ogrzewania.",
     },
   ],
-  // Przykład pod mix HVAC — przy kliencie przepisz FAQ pod jego profil (klima / pompy / kotły / wentylacja).
   faqs: [
     {
       q: "Czy montujecie i serwisujecie klimatyzację?",
@@ -149,7 +185,7 @@ export const defaultPreset: SitePreset = {
     },
     {
       q: "Ile kosztuje montaż klimatyzacji?",
-      a: "Koszt zależy od mocy urządzenia i zakresu prac. Dokładną wycenę przedstawimy po oględzinach lub krótkiej rozmowie.",
+      a: "Koszt zależy od mocy urządzenia i zakresu prac. Wycenę przedstawimy po oględzinach lub rozmowie.",
     },
     {
       q: "Czy serwisujecie pompy ciepła i kotły?",
@@ -161,13 +197,17 @@ export const defaultPreset: SitePreset = {
     },
     {
       q: "Czy dojeżdżacie do klienta?",
-      a: `Tak. Obsługujemy ${siteCity.toLowerCase()}. Przyjeżdżamy na miejsce, bez punktu stacjonarnego.`,
+      a: `Tak. Obsługujemy ${siteCity.toLowerCase()}. Przyjeżdżamy na montaż i serwis.`,
     },
   ],
   serviceOptionGroups: [
     {
       label: "Klimatyzacja",
-      options: ["Montaż klimatyzacji split", "Serwis i przegląd klimatyzacji", "Naprawa awaryjna klimatyzacji"],
+      options: [
+        "Montaż klimatyzacji split",
+        "Serwis i przegląd klimatyzacji",
+        "Naprawa awaryjna klimatyzacji",
+      ],
     },
     {
       label: "Pompy ciepła",
@@ -179,11 +219,15 @@ export const defaultPreset: SitePreset = {
     },
     {
       label: "Wentylacja i ogrzewanie",
-      options: ["Montaż rekuperacji", "Serwis kotła gazowego", "Przegląd i konserwacja ogrzewania"],
+      options: [
+        "Montaż rekuperacji",
+        "Serwis kotła gazowego",
+        "Przegląd i konserwacja ogrzewania",
+      ],
     },
     {
       label: "Inne",
       options: ["Potrzebuję doradztwa", "Naprawa awaryjna HVAC"],
     },
   ],
-};
+});

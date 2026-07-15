@@ -1,4 +1,4 @@
-/** Konfiguracja strony — aktywny preset w .env (VITE_CITY_PRESET) lub edycja plików w src/lib/presets/ */
+/** Konfiguracja strony — aktywny preset w .env (VITE_SITE_PRESET) lub edycja plików w src/lib/presets/ */
 
 import { getActivePreset, PRESET_IDS, type PresetId } from "@/lib/presets";
 
@@ -7,6 +7,13 @@ const preset = getActivePreset();
 export { PRESET_IDS, type PresetId };
 
 export const SITE_PRESET_ID = preset.id;
+export const HVAC_PROFILE = preset.hvacProfile;
+export const SCHEMA_TYPE = preset.schemaType;
+export const SECTIONS = preset.sections;
+export const SECTION_TITLES = preset.sectionTitles;
+export const HOW_IT_WORKS_STEPS = preset.howItWorksSteps;
+export const BRAND_COLORS = preset.brandColors;
+
 export const SITE_NAME = preset.siteName;
 export const COMPANY_LEGAL_NAME = preset.companyLegalName;
 export const SITE_CITY = preset.siteCity;
@@ -20,7 +27,7 @@ export const PHONE_E164 = preset.phoneE164;
 export const PHONE_HREF = `tel:${PHONE_E164}`;
 export const SMS_HREF = `sms:${PHONE_E164}`;
 
-const WHATSAPP_TEXT = encodeURIComponent("Dzień dobry, chciałbym zgłosić zlecenie serwisowe.");
+const WHATSAPP_TEXT = encodeURIComponent(preset.whatsappPrefillMessage);
 export const WHATSAPP_HREF = `https://wa.me/${PHONE_E164.replace("+", "")}?text=${WHATSAPP_TEXT}`;
 
 export const EMAIL = preset.email;
@@ -64,7 +71,7 @@ export const SITE_TITLE = preset.siteTitle;
 export const SITE_KEYWORDS = preset.siteKeywords;
 export const SITE_DESCRIPTION =
   preset.siteDescription ??
-  `Montaż i serwis klimatyzacji, pomp ciepła i instalacji HVAC ${CITY_LOCATIVE} i okolicach. Dojazd do klienta. Zadzwoń: ${PHONE_DISPLAY}.`;
+  `Montaż i serwis instalacji grzewczo-klimatyzacyjnych ${CITY_LOCATIVE} i okolicach. Dojazd do klienta. Zadzwoń: ${PHONE_DISPLAY}.`;
 export const SITE_OG_IMAGE = preset.ogImage;
 
 export const GALLERY = preset.gallery;

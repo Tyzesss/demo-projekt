@@ -128,22 +128,22 @@ Przed pisaniem presetu przeanalizuj stronę klienta i Maps: **co sprzedaje w pie
 
 ## Architektura szablonu — co edytujesz, a czego nie
 
-**Jedyny plik z treścią klienta:** skopiuj `src/lib/presets/default.ts` → `src/lib/presets/[id-klienta].ts`, edytuj, zarejestruj w `src/lib/presets/index.ts`.
+**Jedyny plik z treścią klienta:** `npm run new-preset [id]` lub skopiuj `src/lib/presets/default.ts` / `vertical-*.ts` → `src/lib/presets/[id-klienta].ts`, edytuj, zarejestruj w `src/lib/presets/index.ts` (skrypt robi to automatycznie).
 
 Wszystko idzie przez preset → `src/lib/site.ts` → komponenty. **Nie hardcoduj** danych w `site.ts`, `index.tsx`, `schema.ts`.
 
 | Plik | Kiedy edytować |
 |------|----------------|
-| `src/lib/presets/[klient].ts` | Zawsze — główna personalizacja |
-| `src/styles.css` | Kolory marki |
+| `src/lib/presets/[klient].ts` | Zawsze — główna personalizacja (dane + `sections`, `sectionTitles`, `howItWorksSteps`, `brandColors`) |
+| `src/styles.css` | Kolory marki (gdy brak `brandColors` w presecie) |
 | `public/logo.*`, `public/gallery/*`, `public/favicon.*` | Logo, zdjęcia, favicon |
 | `src/lib/presets/types.ts` + `index.tsx` (`SERVICE_ICONS`) | Tylko gdy potrzebujesz nowej ikony usługi |
-| `src/components/HowItWorks.tsx` | Rzadko — tylko gdy proces firmy mocno odbiega (np. tylko sprzedaż bez serwisu) |
+| `src/components/HowItWorks.tsx` | Rzadko — kroki są w presecie (`howItWorksSteps`) |
 | `src/routes/index.tsx` | **Nie edytuj** przy personalizacji |
 | `src/routes/__root.tsx` | Tylko `theme-color` w meta, jeśli zmieniasz ciemny akcent |
 
 Ustaw w `.env` / `.env.example`:
-- `VITE_CITY_PRESET=[id-klienta]`
+- `VITE_SITE_PRESET=[id-klienta]`
 - `VITE_SITE_URL=[domena podglądu lub docelowa]`
 
 Na koniec: `npm run build` — musi przejść bez błędów.
@@ -214,7 +214,7 @@ Personalizuj tam, gdzie lead **widzi markę i ofertę**: kolory, logo, zdjęcia,
 
 ### 1. Nowy preset klienta
 
-1. `cp src/lib/presets/default.ts src/lib/presets/[id].ts` (np. `termo-katowice`)
+1. `npm run new-preset [id]` (np. `termo-katowice`) **lub** skopiuj `default.ts` / `vertical-*.ts` → `src/lib/presets/[id].ts`
 2. Uzupełnij wszystkie pola:
 
 | Pole | Zasada |
@@ -443,9 +443,9 @@ W presetcie ustaw:
 
 ### 7. „Jak to działa”
 
-Domyślnie **nie edytuj** — 3 kroki (Zgłoszenie → Termin → Realizacja) pasują do większości firm HVAC (montaż, serwis, przeglądy).
+Domyślnie **nie edytuj komponentu** — kroki są w presecie (`howItWorksSteps`). 3 kroki (Zgłoszenie → Termin → Realizacja) pasują do większości firm HVAC.
 
-Edytuj `src/components/HowItWorks.tsx` **tylko** gdy proces firmy mocno odbiega (np. tylko sprzedaż bez dojazdu). Zachowaj strukturę 3 kroków i ton.
+Edytuj `howItWorksSteps` w presecie **tylko** gdy proces firmy mocno odbiega. Zachowaj strukturę 3 kroków i ton.
 
 ### 8. Build i weryfikacja
 

@@ -60,31 +60,31 @@
   --card-foreground: oklch(0.96 0.012 252);
   --popover: oklch(0.17 0.04 252);
   --popover-foreground: oklch(0.96 0.012 252);
-  --primary: oklch(0.50 0.14 252);
-  --primary-foreground: oklch(0.99 0 0);
+  --primary: #f05a0f;
+  --primary-foreground: #ffffff;
   --secondary: oklch(0.14 0.035 252);
   --secondary-foreground: oklch(0.92 0.02 252);
   --muted: oklch(0.15 0.032 252);
   --muted-foreground: oklch(0.68 0.04 252);
-  --accent: oklch(0.62 0.16 252);
-  --accent-foreground: oklch(0.11 0.032 252);
+  --accent: #00a5e1;
+  --accent-foreground: #000f2d;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(1 0 0 / 0.12);
   --input: oklch(0.20 0.04 252);
-  --ring: oklch(0.62 0.16 252);
+  --ring: #00a5e1;
 
-  /* Brand palette — dostosuj do klienta */
-  --brand-deep: oklch(0.09 0.03 252);
-  --brand-navy: oklch(0.16 0.05 252);
-  --brand-teal: oklch(0.47 0.13 252);
-  --brand-cyan: oklch(0.62 0.16 252);
+  /* KLIMATPRO — kolory z logo (HEX) */
+  --brand-deep: #000f2d;
+  --brand-navy: #0f1e4b;
+  --brand-teal: #0f1e4b;
+  --brand-cyan: #00a5e1;
   --brand-ice: oklch(0.18 0.04 252);
 
-  /* CTA */
-  --cta: oklch(0.50 0.14 252);
-  --cta-hover: oklch(0.56 0.15 252);
-  --cta-foreground: oklch(0.99 0 0);
+  /* CTA — płomień z logo */
+  --cta: #f05a0f;
+  --cta-hover: #f0690f;
+  --cta-foreground: #ffffff;
 
   --gradient-hero: linear-gradient(
     135deg,
@@ -119,19 +119,19 @@
   --transition-smooth: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   --transition-spring: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  --chart-1: oklch(0.50 0.14 252);
-  --chart-2: oklch(0.62 0.16 252);
-  --chart-3: oklch(0.47 0.13 252);
+  --chart-1: #f05a0f;
+  --chart-2: #00a5e1;
+  --chart-3: #0f1e4b;
   --chart-4: oklch(0.32 0.06 252);
-  --chart-5: oklch(0.55 0.12 252);
+  --chart-5: #f0690f;
   --sidebar: oklch(0.12 0.03 252);
   --sidebar-foreground: oklch(0.95 0.012 252);
-  --sidebar-primary: oklch(0.50 0.14 252);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-primary: #f05a0f;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: oklch(0.18 0.04 252);
   --sidebar-accent-foreground: oklch(0.95 0.012 252);
   --sidebar-border: oklch(1 0 0 / 0.1);
-  --sidebar-ring: oklch(0.62 0.16 252);
+  --sidebar-ring: #00a5e1;
 }
 
 @layer base {

@@ -1,8 +1,8 @@
-# Szablon landing page — HVAC (klimatyzacja, pompy, wentylacja, ogrzewanie)
+# Szablon-matka — landing page HVAC
 
-Responsywny one-page dla firm HVAC i instalacyjnych. TanStack Start + React + Tailwind.
+Responsywny one-page dla firm z branży **grzewczo-klimatyzacyjnej**. Domyślny preset to demo **KLIMATPRO Kraków** — gotowa wizytówka z logo, zdjęciami i copy.
 
-**Szablon = szata graficzna + UX.** Przy personalizacji **H1, bullety hero i usługi muszą odzwierciedlać priorytety firmy** — patrz [PROMPT-PERSONALIZACJA.md](./PROMPT-PERSONALIZACJA.md) (zacznij od **„Krok zero”**).
+**Matka = szata graficzna + UX + silnik konfiguracji.** Przy personalizacji **H1, bullety hero i usługi muszą odzwierciedlać priorytety firmy** — patrz [PROMPT-PERSONALIZACJA.md](./PROMPT-PERSONALIZACJA.md).
 
 ## Szybki start
 
@@ -14,87 +14,105 @@ npm run dev
 
 Strona: `http://localhost:5173`
 
-## Personalizacja nowego klienta (~15–30 min)
+## Nowy klient HVAC (~15–30 min)
 
-### 1. Skopiuj preset
+### 1. Utwórz preset
 
 ```bash
-cp src/lib/presets/default.ts src/lib/presets/klient-miasto.ts
+npm run new-preset firma-krakow
 ```
 
-Edytuj dane firmy, usługi, FAQ, galerię i opinie w nowym pliku.
+Edytuj `src/lib/presets/firma-krakow.ts` — dane firmy, usługi, FAQ, galerię, opinie.
 
-Zarejestruj preset w `src/lib/presets/index.ts`:
+Alternatywnie skopiuj **wzorzec profilu** jako punkt startowy:
+- `vertical-klimatyzacja` — firma od klimy
+- `vertical-pompy-ciepla` — pompy ciepła
+- `vertical-kotly` — kotły i ogrzewanie
+- `vertical-mix-hvac` — pełny mix HVAC
 
-```ts
-import { klientMiastoPreset } from "./klient-miasto";
-
-export type PresetId = "default" | "klient-miasto";
-
-export const PRESETS = {
-  default: defaultPreset,
-  "klient-miasto": klientMiastoPreset,
-};
-```
+Ustaw w `.env`: `VITE_SITE_PRESET=firma-krakow`
 
 ### 2. Zmienne środowiskowe (`.env`)
 
 | Zmienna | Opis |
 |---------|------|
 | `VITE_SITE_URL` | Domena produkcyjna (canonical, OG, sitemap) |
-| `VITE_CITY_PRESET` | Id presetu klienta, np. `klient-miasto` |
+| `VITE_SITE_PRESET` | Id presetu klienta, np. `firma-krakow` |
 | `VITE_WEB3FORMS_ACCESS_KEY` | Klucz Web3Forms (formularz kontaktowy) |
+
+`VITE_CITY_PRESET` nadal działa (deprecated).
 
 ### 3. Assety
 
 | Plik | Opis |
 |------|------|
-| `public/logo.svg` (lub `.png`) | Logo firmy — ustaw `logoUrl` w presetcie |
-| `public/gallery/*` | Realizacje: klient priorytetowo; brak → 6 zapasowych; <6 → dopełnij do 6; >6 → wszystkie |
+| `public/logo.svg` (lub `.png`) | Logo firmy |
+| `public/gallery/*` | Realizacje klienta |
 | `public/favicon.svg` | Ikona strony |
 
-Po wgraniu zdjęć JPG: `node scripts/optimize-gallery.mjs` — konwertuje do WebP.
+Po wgraniu JPG: `node scripts/optimize-gallery.mjs`
 
 ### 4. Checklist przed oddaniem klientowi
 
-- [ ] Ustaw `VITE_SITE_URL` i `VITE_CITY_PRESET` w `.env` / Vercel
-- [ ] Uzupełnij NIP, REGON, telefon, e-mail, obszar działania w presetcie
+- [ ] Ustaw `VITE_SITE_URL` i `VITE_SITE_PRESET` w `.env` / Vercel
+- [ ] Uzupełnij NIP, REGON, telefon, e-mail, obszar działania w presecie
 - [ ] Podmień logo, hero, galerię (`heroImage`, `ogImage`, `gallery[]`)
-- [ ] Dostosuj usługi, FAQ, partnerów, opinie w presetcie
+- [ ] Dostosuj usługi, FAQ, partnerów, opinie w presecie
 - [ ] Ustaw link Google Maps (`mapsUrl`, `googleReviewsUrl`)
 - [ ] Uruchom `npm run generate:seo` (lub `npm run build`)
 - [ ] Sprawdź formularz i toast po wysłaniu
 - [ ] Sprawdź mobile: sticky bar (telefon + WhatsApp)
 
-### 5. Kolory marki (opcjonalnie)
+### 5. Kolory marki
 
-Edytuj zmienne w `src/styles.css`:
+W presecie (opcjonalnie):
 
-- `--brand-teal`, `--brand-cyan` — akcenty i gradienty
-- `--cta`, `--cta-hover` — przyciski CTA
+```ts
+brandColors: {
+  brandTeal: "oklch(...)",
+  brandCyan: "oklch(...)",
+  cta: "oklch(...)",
+  ctaHover: "oklch(...)",
+},
+```
+
+Lub edytuj `src/styles.css`: `--brand-teal`, `--brand-cyan`, `--cta`, `--cta-hover`.
 
 ---
 
-## Co jest w presetcie
+## Co jest w presecie
 
-Jeden plik (`src/lib/presets/*.ts`) zawiera **wszystkie dane klienta**:
+Jeden plik (`src/lib/presets/*.ts`) zawiera **wszystkie dane i konfigurację klienta**:
 
-- Tożsamość firmy (nazwa, NIP, REGON, kontakt)
-- SEO (title, description, keywords)
-- Hero (nagłówek, bullet points)
-- Usługi, FAQ, opcje formularza
-- Galeria, opinie, partnerzy
-- Godziny, obszar działania, linki Maps
+- Tożsamość firmy, SEO, hero, usługi, FAQ, formularz
+- Galeria, opinie, partnerzy, godziny, Maps
+- Profil HVAC (`hvacProfile`), schema.org (`schemaType`)
+- Sekcje włącz/wyłącz (`sections`), nagłówki (`sectionTitles`)
+- Kroki „Jak to działa”, WhatsApp, opcjonalne kolory marki
 
-Komponenty (`index.tsx`, footer, RODO) czytają dane przez `src/lib/site.ts` — **nie edytuj ich** przy personalizacji.
+Komponenty czytają dane przez `src/lib/site.ts` — **nie edytuj ich** przy personalizacji.
+
+---
+
+## Presety-wzorce (profile HVAC)
+
+| Id presetu | Profil |
+|------------|--------|
+| `default` | Demo KLIMATPRO Kraków (matka z logo i zdjęciami) |
+| `vertical-klimatyzacja` | Klimatyzacja |
+| `vertical-pompy-ciepla` | Pompy ciepła |
+| `vertical-kotly` | Kotły i ogrzewanie |
+| `vertical-mix-hvac` | Mix HVAC |
+
+Podgląd wzorca: ustaw `VITE_SITE_PRESET=vertical-klimatyzacja` w `.env`.
 
 ---
 
 ## SEO (wbudowane)
 
 - Meta title, description, keywords, canonical, Open Graph
-- JSON-LD `HVACBusiness` (schema.org)
-- `robots.txt` + `sitemap.xml` — generowane przez `npm run generate:seo`
+- JSON-LD (`HVACBusiness` domyślnie, konfigurowalne w presecie)
+- `robots.txt` + `sitemap.xml` — `npm run generate:seo`
 - Polityka RODO z NIP, REGON, cookies
 
 ---
@@ -103,8 +121,9 @@ Komponenty (`index.tsx`, footer, RODO) czytają dane przez `src/lib/site.ts` —
 
 ```bash
 npm run dev             # development
-npm run generate:seo    # robots.txt + sitemap.xml z VITE_SITE_URL
-npm run build           # produkcja (auto: generate:seo)
+npm run new-preset      # nowy preset klienta
+npm run generate:seo    # robots.txt + sitemap.xml
+npm run build           # produkcja
 npm run preview         # podgląd buildu
 npm run lint            # ESLint
 ```
@@ -112,20 +131,22 @@ npm run lint            # ESLint
 ## Struktura projektu
 
 ```
-src/lib/site.ts          ← eksport aktywnego presetu
-src/lib/presets/         ← dane per klient (TU PERSONALIZUJESZ)
-src/lib/schema.ts        ← JSON-LD
-src/routes/index.tsx     ← layout strony (bez danych klienta)
-public/gallery/          ← zdjęcia realizacji
-scripts/generate-seo-files.mjs
+src/lib/site.ts              ← eksport aktywnego presetu
+src/lib/presets/             ← dane per klient (TU PERSONALIZUJESZ)
+  default.ts                 ← placeholder matki
+  vertical-*.ts              ← wzorce profili HVAC
+  shared.ts                  ← domyślne sekcje, kroki, helper
+src/lib/schema.ts            ← JSON-LD
+src/routes/index.tsx         ← layout (bez danych klienta)
+scripts/new-preset.mjs       ← generator presetu
 ```
 
 ## Deploy (Vercel)
 
 - Build Command: `npm run build`
 - Output Directory: *(puste — Nitro generuje `.vercel/output`)*
-- Env: `VITE_SITE_URL`, `VITE_CITY_PRESET`, `VITE_WEB3FORMS_ACCESS_KEY`
+- Env: `VITE_SITE_URL`, `VITE_SITE_PRESET`, `VITE_WEB3FORMS_ACCESS_KEY`
 
 ---
 
-Szczegółowy przewodnik: [TEMPLATE.md](./TEMPLATE.md) · Prompt do leadów: [PROMPT-PERSONALIZACJA.md](./PROMPT-PERSONALIZACJA.md)
+Szczegółowy przewodnik: [TEMPLATE.md](./TEMPLATE.md) · Architektura: [ARCHITECTURE.md](./ARCHITECTURE.md) · Prompt pod leada: [PROMPT-PERSONALIZACJA.md](./PROMPT-PERSONALIZACJA.md)

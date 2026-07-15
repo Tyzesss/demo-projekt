@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "generate:seo": "node scripts/generate-seo-files.mjs",
+    "new-preset": "node scripts/new-preset.mjs",
     "prebuild": "npm run generate:seo",
     "build": "vite build",
     "build:dev": "vite build --mode development",

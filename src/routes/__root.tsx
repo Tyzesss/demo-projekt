@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { BrandColorsStyle } from "@/components/BrandColorsStyle";
 import { Toaster } from "@/components/ui/sonner";
 import {
   SITE_TITLE,
@@ -96,7 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "keywords", content: SITE_KEYWORDS },
       { name: "robots", content: "index, follow" },
       { name: "author", content: SITE_NAME },
-      { name: "theme-color", content: "#1a2d45" },
+      { name: "theme-color", content: "#000F2D" },
       { property: "og:title", content: SITE_TITLE },
       { property: "og:description", content: SITE_DESCRIPTION },
       { property: "og:type", content: "website" },
@@ -135,6 +136,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="pl">
       <head>
         <HeadContent />
+        <BrandColorsStyle />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: LOCAL_BUSINESS_JSON_LD }} />
       </head>
       <body>

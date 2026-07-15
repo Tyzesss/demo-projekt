@@ -13,9 +13,13 @@ export function SiteLogo({ className, imageClassName }: SiteLogoProps) {
         <img
           src={LOGO_URL}
           alt={LOGO_INCLUDES_NAME ? SITE_NAME : ""}
-          className={cn("h-9 w-auto max-w-[140px] object-contain", imageClassName)}
-          width={160}
-          height={36}
+          className={cn(
+            "h-11 w-auto object-contain",
+            LOGO_INCLUDES_NAME ? "max-w-[280px]" : "max-w-[180px]",
+            imageClassName,
+          )}
+          width={220}
+          height={44}
         />
         {!LOGO_INCLUDES_NAME ? (
           <span className="font-bold tracking-tight text-foreground">{SITE_NAME}</span>
