@@ -11,6 +11,7 @@ import {
 import appCss from "../styles.css?url";
 import { BrandColorsStyle } from "@/components/BrandColorsStyle";
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@vercel/analytics/react";
 import {
   SITE_TITLE,
   SITE_DESCRIPTION,
@@ -142,6 +143,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <body>
         {children}
         <Toaster richColors position="top-center" />
+        <Analytics />
         <Scripts />
       </body>
     </html>
