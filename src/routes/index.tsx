@@ -177,7 +177,6 @@ function LeadForm({
   const nameId = `${idPrefix}-name`;
   const serviceId = `${idPrefix}-service`;
   const moreId = `${idPrefix}-more`;
-  const extrasVisible = !collapseExtras || moreOpen;
 
   const inputClass =
     "h-11 w-full rounded-lg border border-white/20 bg-white/10 px-3.5 text-sm text-white placeholder:text-white/50 outline-none transition-smooth focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/25";
@@ -285,7 +284,10 @@ function LeadForm({
             className="inline-flex items-center gap-1 text-[11px] font-medium text-white/50 transition-smooth hover:text-white/80"
           >
             <ChevronDown
-              className={cn("h-3 w-3 transition-transform duration-200", moreOpen && "rotate-180")}
+              className={cn(
+                "h-3 w-3 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                moreOpen && "rotate-180",
+              )}
               aria-hidden
             />
             {moreOpen ? "Mniej" : "Więcej (imię, usługa)"}
@@ -293,10 +295,23 @@ function LeadForm({
 
           <div
             id={`${idPrefix}-extra`}
-            hidden={!extrasVisible}
-            className="mt-2.5 grid gap-3"
+            className={cn(
+              "grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+              moreOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+            )}
+            aria-hidden={!moreOpen}
+            inert={!moreOpen ? true : undefined}
           >
-            {extraFields}
+            <div className="overflow-hidden">
+              <div
+                className={cn(
+                  "mt-2.5 grid gap-3 transition-opacity duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                  moreOpen ? "opacity-100" : "opacity-0",
+                )}
+              >
+                {extraFields}
+              </div>
+            </div>
           </div>
         </div>
       ) : (
@@ -309,12 +324,30 @@ function LeadForm({
           collapseExtras ? "text-[11px] text-white/55" : "text-xs text-white/75",
         )}
       >
-        <input
-          required
-          type="checkbox"
-          name="rodo"
-          className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-white/30 accent-[var(--cta)]"
-        />
+        <span className="relative mt-0.5 inline-flex h-4 w-4 shrink-0">
+          <input
+            required
+            type="checkbox"
+            name="rodo"
+            className="peer absolute inset-0 z-10 cursor-pointer opacity-0"
+          />
+          <span
+            className="pointer-events-none flex h-4 w-4 items-center justify-center rounded border border-white/35 bg-white/10 transition-colors peer-checked:border-[var(--brand-cyan)] peer-checked:bg-[var(--brand-cyan)] peer-checked:[&_svg]:opacity-100 peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--brand-cyan)]/40"
+            aria-hidden
+          >
+            <svg
+              viewBox="0 0 12 12"
+              className="h-2.5 w-2.5 text-white opacity-0 transition-opacity"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M2 6.2 4.8 9 10 3" />
+            </svg>
+          </span>
+        </span>
         <span>
           Akceptuję{" "}
           <Link to="/polityka-prywatnosci" className="text-brand-cyan underline underline-offset-2 hover:text-white">
@@ -553,31 +586,60 @@ function SiteHeader() {
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
-            className="inline-flex rounded-full p-2 text-foreground transition-smooth hover:bg-white/10 md:hidden"
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-smooth hover:bg-white/10 md:hidden"
             aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
             aria-label={menuOpen ? "Zamknij menu" : "Otwórz menu"}
           >
-            {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            <Menu
+              className={cn(
+                "h-6 w-6 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                menuOpen ? "rotate-90 scale-75 opacity-0" : "rotate-0 scale-100 opacity-100",
+              )}
+              aria-hidden
+            />
+            <X
+              className={cn(
+                "absolute h-6 w-6 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                menuOpen ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-75 opacity-0",
+              )}
+              aria-hidden
+            />
           </button>
         </div>
       </div>
 
-      {menuOpen && (
-        <div className="animate-fade-in border-b border-white/10 bg-background/98 backdrop-blur-[10px] md:hidden">
-          <nav className="mx-auto flex max-w-6xl flex-col px-4 py-4 text-left">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="border-b border-white/10 py-3 text-base font-semibold text-foreground transition-smooth last:border-0 hover:text-brand-cyan"
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
+      <div
+        id="mobile-nav"
+        className={cn(
+          "grid md:hidden transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+        )}
+        aria-hidden={!menuOpen}
+        inert={!menuOpen ? true : undefined}
+      >
+        <div className="overflow-hidden">
+          <div className="border-b border-white/10 bg-background/98 backdrop-blur-[10px]">
+            <nav className="mx-auto flex max-w-6xl flex-col px-4 py-4 text-left">
+              {NAV_LINKS.map((link, i) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  tabIndex={menuOpen ? undefined : -1}
+                  onClick={() => setMenuOpen(false)}
+                  className={cn(
+                    "border-b border-white/10 py-3 text-base font-semibold text-foreground transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] last:border-0 hover:text-brand-cyan",
+                    menuOpen ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0",
+                  )}
+                  style={{ transitionDelay: menuOpen ? `${80 + i * 40}ms` : "0ms" }}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }
