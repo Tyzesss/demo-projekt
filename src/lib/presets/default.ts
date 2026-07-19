@@ -4,10 +4,10 @@ const siteCity = "Kraków i okolice";
 const cityLocative = "w Krakowie";
 const siteName = "KLIMATPRO";
 
-/** Demo lidera branży — gotowa wizytówka matki KLIMATPRO do podglądu i klonowania pod klienta. */
+/** Demo lidera branży: gotowa wizytówka matki KLIMATPRO do podglądu i klonowania pod klienta. */
 export const defaultPreset = withPresetDefaults({
   id: "default",
-  label: "Demo — KLIMATPRO Kraków",
+  label: "Demo: KLIMATPRO Kraków",
   hvacProfile: "mix-hvac",
   siteName,
   companyLegalName: "KLIMATPRO Instalacje Sp. z o.o.",
@@ -139,8 +139,8 @@ export const defaultPreset = withPresetDefaults({
   ],
   heroHeadline: "Montaż i serwis klimatyzacji",
   heroBullets: [
-    "Klimatyzacja, pompy ciepła, wentylacja i ogrzewanie. Od montażu po serwis.",
-    "Dojazd do klienta na terenie Krakowa i okolic. Termin ustalamy telefonicznie.",
+    "Dobór, montaż i serwis bez niespodzianek w zakresie prac.",
+    "Koszt potwierdzamy przed rozpoczęciem prac.",
   ],
   footerTagline: "Klimatyzacja, pompy ciepła i HVAC",
   servicesSectionSubtitle:

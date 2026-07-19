@@ -22,7 +22,7 @@ export const Route = createFileRoute("/polityka-prywatnosci")({
       { title: `Polityka Prywatności (RODO) | ${SITE_NAME}` },
       {
         name: "description",
-        content: `Polityka prywatności i informacja o przetwarzaniu danych osobowych — ${SITE_NAME}.`,
+        content: `Polityka prywatności i informacja o przetwarzaniu danych osobowych (${SITE_NAME}).`,
       },
     ],
   }),
@@ -96,7 +96,7 @@ function PolitykaPrywatnosci() {
             <h2 className="text-lg font-semibold text-foreground">4. Okres przechowywania</h2>
             <p className="mt-2">
               Dane przechowujemy przez czas niezbędny do udzielenia odpowiedzi i prowadzenia korespondencji
-              handlowej, nie dłużej niż jest to wymagane przepisami prawa lub do momentu wycofania zgody —
+              handlowej, nie dłużej niż jest to wymagane przepisami prawa lub do momentu wycofania zgody,
               jeśli przetwarzanie opiera się wyłącznie na zgodzie.
             </p>
           </section>
@@ -117,7 +117,7 @@ function PolitykaPrywatnosci() {
             <h2 className="text-lg font-semibold text-foreground">6. Odbiorcy danych</h2>
             <p className="mt-2">
               Dane mogą być powierzane podmiotom świadczącym usługi hostingu, dostarczania formularza kontaktowego
-              (Web3Forms) oraz poczty e-mail — wyłącznie na podstawie umów powierzenia i w zakresie niezbędnym do
+              (Web3Forms) oraz poczty e-mail, wyłącznie na podstawie umów powierzenia i w zakresie niezbędnym do
               realizacji usług.
             </p>
           </section>

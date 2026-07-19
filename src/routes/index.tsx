@@ -148,17 +148,36 @@ function CTAButton({ className = "" }: { className?: string }) {
   return (
     <a
       href={PHONE_HREF}
-      className={`btn-cta px-6 py-3.5 text-sm md:px-10 md:py-4 md:text-lg ${className}`}
+      className={cn(
+        "btn-cta px-6 py-3.5 text-sm md:px-10 md:py-4 md:text-lg",
+        className,
+      )}
     >
-      <Phone className="h-5 w-5 shrink-0 md:h-6 md:w-6" />
-      <span>Zadzwoń · {PHONE_DISPLAY}</span>
+      <Phone className="h-6 w-6 shrink-0 md:h-6 md:w-6" />
+      <span>Zadzwoń: {PHONE_DISPLAY}</span>
     </a>
   );
 }
 
-function LeadForm() {
+function LeadForm({
+  idPrefix = "lead",
+  submitVariant = "primary",
+  collapseExtras = false,
+}: {
+  idPrefix?: string;
+  submitVariant?: "primary" | "secondary";
+  /** Na mobile: imię i usługa za „Więcej opcji” + zwarty układ pod konwersję. */
+  collapseExtras?: boolean;
+}) {
   const [service, setService] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  const phoneId = `${idPrefix}-phone`;
+  const nameId = `${idPrefix}-name`;
+  const serviceId = `${idPrefix}-service`;
+  const moreId = `${idPrefix}-more`;
+  const extrasVisible = !collapseExtras || moreOpen;
 
   const inputClass =
     "h-11 w-full rounded-lg border border-white/20 bg-white/10 px-3.5 text-sm text-white placeholder:text-white/50 outline-none transition-smooth focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/25";
@@ -167,6 +186,47 @@ function LeadForm() {
 
   const selectTriggerClass = cn(
     "h-11 w-full rounded-lg border-white/20 bg-white/10 text-sm text-white shadow-none focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/25 data-[placeholder]:text-white/50",
+  );
+
+  const extraFields = (
+    <>
+      <div className="grid gap-1.5">
+        <Label htmlFor={nameId} className={labelClass}>
+          Imię <span className="text-white/50">(opcjonalnie)</span>
+        </Label>
+        <input
+          id={nameId}
+          type="text"
+          name="name"
+          autoComplete="given-name"
+          placeholder="Twoje imię"
+          className={inputClass}
+        />
+      </div>
+      <div className="grid gap-1.5">
+        <Label htmlFor={serviceId} className={labelClass}>
+          Rodzaj usługi <span className="text-white/50">(opcjonalnie)</span>
+        </Label>
+        <input type="hidden" name="service" value={service} />
+        <Select value={service || undefined} onValueChange={setService}>
+          <SelectTrigger id={serviceId} className={selectTriggerClass}>
+            <SelectValue placeholder="Wybierz z listy" />
+          </SelectTrigger>
+          <SelectContent className="rounded-lg">
+            {SERVICE_OPTION_GROUPS.map((group) => (
+              <SelectGroup key={group.label}>
+                <SelectLabel>{group.label}</SelectLabel>
+                {group.options.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </>
   );
 
   return (
@@ -188,6 +248,7 @@ function LeadForm() {
           });
           form.reset();
           setService("");
+          setMoreOpen(false);
         } catch {
           toast.error("Nie udało się wysłać zgłoszenia.", {
             description: `Zadzwoń: ${PHONE_DISPLAY}`,
@@ -196,44 +257,58 @@ function LeadForm() {
           setSubmitting(false);
         }
       }}
-      className="grid gap-3.5 text-left"
+      className={cn("grid text-left", collapseExtras ? "gap-2.5" : "gap-3.5")}
     >
-      <div className="grid gap-1.5">
-        <Label htmlFor="lead-phone" className={labelClass}>
+      <div className={cn("grid", collapseExtras ? "gap-0" : "gap-1.5")}>
+        <Label htmlFor={phoneId} className={collapseExtras ? "sr-only" : labelClass}>
           Telefon
         </Label>
-        <input required id="lead-phone" type="tel" name="phone" placeholder={`np. ${PHONE_DISPLAY}`} className={inputClass} />
+        <input
+          required
+          id={phoneId}
+          type="tel"
+          name="phone"
+          autoComplete="tel"
+          placeholder="Twój numer"
+          className={inputClass}
+        />
       </div>
-      <div className="grid gap-1.5">
-        <Label htmlFor="lead-name" className={labelClass}>
-          Imię
-        </Label>
-        <input required id="lead-name" type="text" name="name" placeholder="Twoje imię" className={inputClass} />
-      </div>
-      <div className="grid gap-1.5">
-        <Label htmlFor="lead-service" className={labelClass}>
-          Rodzaj usługi <span className="text-white/50">(opcjonalnie)</span>
-        </Label>
-        <input type="hidden" name="service" value={service} />
-        <Select value={service || undefined} onValueChange={setService}>
-          <SelectTrigger id="lead-service" className={selectTriggerClass}>
-            <SelectValue placeholder="Wybierz z listy" />
-          </SelectTrigger>
-          <SelectContent className="rounded-lg">
-            {SERVICE_OPTION_GROUPS.map((group) => (
-              <SelectGroup key={group.label}>
-                <SelectLabel>{group.label}</SelectLabel>
-                {group.options.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <label className="flex cursor-pointer items-start gap-2.5 text-xs leading-snug text-white/75">
+
+      {collapseExtras ? (
+        <div>
+          <button
+            type="button"
+            id={moreId}
+            aria-expanded={moreOpen}
+            aria-controls={`${idPrefix}-extra`}
+            onClick={() => setMoreOpen((open) => !open)}
+            className="inline-flex items-center gap-1 text-[11px] font-medium text-white/50 transition-smooth hover:text-white/80"
+          >
+            <ChevronDown
+              className={cn("h-3 w-3 transition-transform duration-200", moreOpen && "rotate-180")}
+              aria-hidden
+            />
+            {moreOpen ? "Mniej" : "Więcej (imię, usługa)"}
+          </button>
+
+          <div
+            id={`${idPrefix}-extra`}
+            hidden={!extrasVisible}
+            className="mt-2.5 grid gap-3"
+          >
+            {extraFields}
+          </div>
+        </div>
+      ) : (
+        extraFields
+      )}
+
+      <label
+        className={cn(
+          "flex cursor-pointer items-start gap-2.5 leading-snug",
+          collapseExtras ? "text-[11px] text-white/55" : "text-xs text-white/75",
+        )}
+      >
         <input
           required
           type="checkbox"
@@ -243,12 +318,21 @@ function LeadForm() {
         <span>
           Akceptuję{" "}
           <Link to="/polityka-prywatnosci" className="text-brand-cyan underline underline-offset-2 hover:text-white">
-            Politykę Prywatności
+            Politykę prywatności
           </Link>{" "}
-          i wyrażam zgodę na kontakt w sprawie zgłoszenia serwisowego (RODO).
+          i wyrażam zgodę na kontakt.
         </span>
       </label>
-      <button type="submit" disabled={submitting} className="btn-cta h-11 w-full text-sm disabled:opacity-60">
+      <button
+        type="submit"
+        disabled={submitting}
+        className={cn(
+          "w-full disabled:opacity-60",
+          collapseExtras
+            ? "btn-cta mt-1 h-10 text-sm"
+            : cn("h-11 text-sm", submitVariant === "secondary" ? "btn-secondary" : "btn-cta"),
+        )}
+      >
         {submitting ? "Wysyłanie…" : "Poproś o kontakt"}
       </button>
     </form>
@@ -434,7 +518,7 @@ function SiteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b border-white/10 backdrop-blur-xl transition-smooth",
+        "sticky top-0 z-50 border-b border-white/10 backdrop-blur-[10px] transition-smooth",
         scrolled ? "bg-background/80 shadow-card" : "bg-background/60",
       )}
     >
@@ -479,7 +563,7 @@ function SiteHeader() {
       </div>
 
       {menuOpen && (
-        <div className="animate-fade-in border-b border-white/10 bg-background/98 backdrop-blur-xl md:hidden">
+        <div className="animate-fade-in border-b border-white/10 bg-background/98 backdrop-blur-[10px] md:hidden">
           <nav className="mx-auto flex max-w-6xl flex-col px-4 py-4 text-left">
             {NAV_LINKS.map((link) => (
               <a
@@ -532,7 +616,7 @@ function Index() {
               SECTIONS.contactForm ? "md:items-start md:text-left" : "md:mx-auto md:max-w-2xl",
             )}
           >
-            <div className="hero-enter hero-enter-delay-0 order-1 flex justify-center md:order-3 md:mt-3 md:justify-start">
+            <div className="hero-enter hero-enter-delay-0 flex justify-center md:hidden">
               <HeroGoogleRating
                 rating={googleReviews.rating}
                 reviewCount={googleReviews.reviewCount}
@@ -540,15 +624,15 @@ function Index() {
               />
             </div>
 
-            <h1 className="hero-enter hero-enter-delay-1 order-2 mt-3 text-[2.5rem] font-bold leading-[1.06] max-md:mx-auto md:order-1 md:mt-4 md:text-[3.25rem] lg:text-[3.5rem]">
+            <h1 className="hero-enter hero-enter-delay-1 mt-3 text-[2.85rem] font-bold leading-[1.05] max-md:mx-auto md:mt-4 md:text-[3.5rem] lg:text-[3.85rem]">
               {HERO_HEADLINE}
             </h1>
 
-            <p className="hero-enter hero-enter-delay-2 order-3 mt-2 text-xl font-medium text-white/85 md:order-2 md:mt-2 md:text-2xl">
+            <p className="hero-enter hero-enter-delay-2 mt-2 text-xl font-medium text-white/85 md:mt-2 md:text-2xl">
               {SITE_CITY}
             </p>
 
-            <ul className="hero-enter hero-enter-delay-4 order-4 mx-auto mt-4 hidden max-w-xl space-y-2.5 text-left text-base leading-snug text-white/85 md:mx-0 md:block md:text-lg">
+            <ul className="hero-enter hero-enter-delay-4 mx-auto mt-4 hidden max-w-xl space-y-2.5 text-left text-base leading-snug text-white/85 md:mx-0 md:block md:text-lg">
               {HERO_BULLETS.map((bullet) => (
                 <li key={bullet} className="flex items-start gap-2.5">
                   <span
@@ -560,19 +644,47 @@ function Index() {
               ))}
             </ul>
 
-            <div className="hero-enter hero-enter-delay-5 order-5 mt-4 flex justify-center md:mt-6 md:justify-start">
+            <div className="hero-enter hero-enter-delay-5 mt-5 hidden flex-col items-start gap-3 md:flex">
+              <HeroGoogleRating
+                rating={googleReviews.rating}
+                reviewCount={googleReviews.reviewCount}
+                profileUrl={googleReviews.profileUrl || GOOGLE_REVIEWS_URL}
+              />
               <CTAButton />
+            </div>
+
+            {/* Mobile: Call przy H1 */}
+            <div className="hero-enter hero-enter-delay-5 mt-5 flex justify-center md:hidden">
+              <CTAButton className="px-8 py-4 text-base" />
             </div>
           </div>
 
           {SECTIONS.contactForm ? (
-            <div className="hero-enter hero-enter-delay-7 panel-glass mt-5 w-full rounded-2xl p-5 text-center max-md:[&_form]:text-left md:mt-0 md:text-left">
-              <p className="text-sm font-semibold text-white">{SECTION_TITLES.formHeadline}</p>
-              <p className="mt-1 text-xs text-white/75">{SECTION_TITLES.formSubline}</p>
-              <div className="mt-4">
-                <LeadForm />
+            <>
+              <div className="hero-enter hero-enter-delay-6 mx-6 my-6 flex items-center gap-3 md:hidden" aria-hidden>
+                <span className="h-px flex-1 bg-white/12" />
+                <span className="text-xs font-medium uppercase tracking-wide text-white/45">lub</span>
+                <span className="h-px flex-1 bg-white/12" />
               </div>
-            </div>
+
+              {/* Mobile: sam formularz */}
+              <div className="hero-enter hero-enter-delay-7 w-full rounded-2xl border border-white/[0.06] bg-white/[0.04] p-5 backdrop-blur-[10px] md:hidden">
+                <p className="text-center text-base font-semibold text-white">{SECTION_TITLES.formHeadline}</p>
+                <p className="mt-1 text-center text-xs text-white/60">{SECTION_TITLES.formSubline}</p>
+                <div className="mt-3.5">
+                  <LeadForm idPrefix="hero-mobile" collapseExtras />
+                </div>
+              </div>
+
+              {/* Desktop: formularz */}
+              <div className="hero-enter hero-enter-delay-7 mt-5 hidden w-full rounded-2xl border border-white/[0.06] bg-white/[0.04] p-5 text-left backdrop-blur-[10px] md:mt-0 md:block">
+                <p className="text-sm font-semibold text-white">{SECTION_TITLES.formHeadline}</p>
+                <p className="mt-1 text-xs text-white/75">{SECTION_TITLES.formSubline}</p>
+                <div className="mt-4">
+                  <LeadForm idPrefix="hero-desktop" />
+                </div>
+              </div>
+            </>
           ) : null}
         </div>
         </section>
@@ -673,25 +785,31 @@ function Index() {
                 </p>
               </Reveal>
 
-              {SECTIONS.contactForm ? (
-                <>
-                  <Reveal delay={80} className="mt-6">
-                    <p className="text-sm font-semibold text-white">{SECTION_TITLES.formHeadline}</p>
-                    <p className="mt-1 text-xs text-white/75">{SECTION_TITLES.formSubline}</p>
-                    <div className="mt-4 [&_form]:text-left">
-                      <LeadForm />
-                    </div>
-                  </Reveal>
-
-                  <div className="my-6 h-px bg-white/10" aria-hidden />
-                </>
-              ) : null}
-
-              <div className="flex flex-col gap-3">
+              <div className="mt-6 flex flex-col gap-3">
                 {contactCards.map((c, i) => (
                   <ContactCard key={c.title} c={c} index={i} compact />
                 ))}
               </div>
+
+              {SECTIONS.contactForm ? (
+                <>
+                  <div className="mx-6 my-6 flex items-center gap-3" aria-hidden>
+                    <span className="h-px flex-1 bg-white/12" />
+                    <span className="text-xs font-medium uppercase tracking-wide text-white/45">lub</span>
+                    <span className="h-px flex-1 bg-white/12" />
+                  </div>
+
+                  <Reveal delay={80}>
+                    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.04] p-5 backdrop-blur-[10px]">
+                      <p className="text-center text-base font-semibold text-white">{SECTION_TITLES.formHeadline}</p>
+                      <p className="mt-1 text-center text-xs text-white/60">{SECTION_TITLES.formSubline}</p>
+                      <div className="mt-3.5 [&_form]:text-left">
+                        <LeadForm idPrefix="contact-mobile" collapseExtras />
+                      </div>
+                    </div>
+                  </Reveal>
+                </>
+              ) : null}
             </div>
 
             <div className="panel-glass mx-auto hidden max-w-4xl rounded-2xl p-5 md:block md:p-8 lg:p-10">
@@ -706,20 +824,22 @@ function Index() {
               </Reveal>
 
               {SECTIONS.contactForm ? (
-                <div className="mx-auto mt-8 grid w-full md:grid-cols-[minmax(0,26rem)_minmax(0,24rem)] md:items-stretch md:justify-center md:gap-7 lg:mt-10 lg:gap-8">
-                  <Reveal className="h-full text-left">
-                    <p className="text-sm font-semibold text-white">{SECTION_TITLES.formHeadline}</p>
-                    <p className="mt-1 text-xs text-white/75">{SECTION_TITLES.formSubline}</p>
-                    <div className="mt-4 flex flex-1 flex-col">
-                      <LeadForm />
-                    </div>
-                  </Reveal>
-
+                <div className="mx-auto mt-8 grid w-full md:grid-cols-[minmax(0,24rem)_minmax(0,26rem)] md:items-stretch md:justify-center md:gap-7 lg:mt-10 lg:gap-8">
                   <div className="flex h-full min-h-0 flex-col gap-3">
                     {contactCards.map((c, i) => (
                       <ContactCard key={c.title} c={c} index={i} compact stretch />
                     ))}
                   </div>
+
+                  <Reveal className="h-full text-left">
+                    <div className="flex h-full flex-col rounded-2xl border border-white/[0.06] bg-white/[0.04] p-5 backdrop-blur-[10px]">
+                      <p className="text-sm font-semibold text-white">{SECTION_TITLES.formHeadline}</p>
+                      <p className="mt-1 text-xs text-white/75">{SECTION_TITLES.formSubline}</p>
+                      <div className="mt-4 flex flex-1 flex-col">
+                        <LeadForm idPrefix="contact-desktop" />
+                      </div>
+                    </div>
+                  </Reveal>
                 </div>
               ) : (
                 <div className="mx-auto mt-8 grid w-full max-w-md gap-3">

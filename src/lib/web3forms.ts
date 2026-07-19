@@ -20,7 +20,7 @@ export function getWeb3FormsAccessKey(): string {
 export async function submitLeadForm(payload: LeadFormPayload): Promise<void> {
   const accessKey = getWeb3FormsAccessKey();
   if (!accessKey) {
-    throw new Error("Brak klucza Web3Forms — ustaw VITE_WEB3FORMS_ACCESS_KEY w .env");
+    throw new Error("Brak klucza Web3Forms. Ustaw VITE_WEB3FORMS_ACCESS_KEY w .env");
   }
 
   const messageLines = [
@@ -28,11 +28,13 @@ export async function submitLeadForm(payload: LeadFormPayload): Promise<void> {
     payload.service ? `Rodzaj usługi: ${payload.service}` : null,
   ].filter(Boolean);
 
+  const displayName = payload.name.trim() || "Klient (bez imienia)";
+
   const body = {
     access_key: accessKey,
-    subject: `Zgłoszenie serwisowe — ${SITE_NAME}`,
-    from_name: payload.name,
-    name: payload.name,
+    subject: `Zgłoszenie serwisowe: ${SITE_NAME}`,
+    from_name: displayName,
+    name: displayName,
     phone: payload.phone,
     message: messageLines.join("\n"),
   };
