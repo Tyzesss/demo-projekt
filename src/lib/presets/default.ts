@@ -137,7 +137,7 @@ export const defaultPreset = withPresetDefaults({
       relativeTime: "6 mies. temu",
     },
   ],
-  heroHeadline: "Montaż i serwis instalacji HVAC",
+  heroHeadline: "Montaż i serwis klimatyzacji",
   heroBullets: [
     "Klimatyzacja, pompy ciepła, wentylacja i ogrzewanie. Od montażu po serwis.",
     "Dojazd do klienta na terenie Krakowa i okolic. Termin ustalamy telefonicznie.",
