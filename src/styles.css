@@ -200,28 +200,28 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 20% 42%;
-    opacity: 0.38;
+    opacity: 0.34;
     animation: hero-photo-enter 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 55%,
-      rgb(0 0 0 / 0.6) 78%,
-      transparent 96%
+      #000 48%,
+      rgb(0 0 0 / 0.55) 72%,
+      transparent 94%
     );
     mask-image: linear-gradient(
       to bottom,
       #000 0%,
-      #000 55%,
-      rgb(0 0 0 / 0.6) 78%,
-      transparent 96%
+      #000 48%,
+      rgb(0 0 0 / 0.55) 72%,
+      transparent 94%
     );
   }
 
   @media (min-width: 768px) {
     .hero-services-bg .hero-photo {
       background-position: 14% 40%;
-      opacity: 0.48;
+      opacity: 0.44;
     }
   }
 
@@ -230,11 +230,11 @@
     inset: 0;
     background: linear-gradient(
       180deg,
-      oklch(0.09 0.03 252 / 0.78) 0%,
-      oklch(0.11 0.032 252 / 0.45) 28%,
-      oklch(0.11 0.032 252 / 0.18) 48%,
-      oklch(0.11 0.032 252 / 0.32) 65%,
-      oklch(0.11 0.032 252 / 0.12) 82%,
+      oklch(0.09 0.03 252 / 0.83) 0%,
+      oklch(0.11 0.032 252 / 0.5) 28%,
+      oklch(0.11 0.032 252 / 0.2) 48%,
+      oklch(0.11 0.032 252 / 0.37) 65%,
+      oklch(0.11 0.032 252 / 0.14) 82%,
       transparent 100%
     );
   }
@@ -245,17 +245,17 @@
         linear-gradient(
           180deg,
           transparent 0%,
-          oklch(0.11 0.032 252 / 0.06) 42%,
-          oklch(0.11 0.032 252 / 0.28) 68%,
-          oklch(0.11 0.032 252 / 0.1) 86%,
+          oklch(0.11 0.032 252 / 0.07) 42%,
+          oklch(0.11 0.032 252 / 0.32) 68%,
+          oklch(0.11 0.032 252 / 0.11) 86%,
           transparent 100%
         ),
         linear-gradient(
           105deg,
-          oklch(0.09 0.03 252 / 0.82) 0%,
-          oklch(0.09 0.03 252 / 0.52) 28%,
-          oklch(0.11 0.032 252 / 0.2) 50%,
-          oklch(0.11 0.032 252 / 0.06) 66%,
+          oklch(0.09 0.03 252 / 0.86) 0%,
+          oklch(0.09 0.03 252 / 0.58) 28%,
+          oklch(0.11 0.032 252 / 0.24) 50%,
+          oklch(0.11 0.032 252 / 0.08) 66%,
           transparent 80%
         );
     }

@@ -320,11 +320,11 @@ function LeadForm({
 
       <label
         className={cn(
-          "flex cursor-pointer items-start gap-2.5 leading-snug",
+          "flex cursor-pointer items-center gap-2.5 leading-snug",
           collapseExtras ? "text-[11px] text-white/55" : "text-xs text-white/75",
         )}
       >
-        <span className="relative mt-0.5 inline-flex h-4 w-4 shrink-0">
+        <span className="relative inline-flex h-4 w-4 shrink-0">
           <input
             required
             type="checkbox"
@@ -348,7 +348,7 @@ function LeadForm({
             </svg>
           </span>
         </span>
-        <span>
+        <span className="min-w-0">
           Akceptuję{" "}
           <Link to="/polityka-prywatnosci" className="text-brand-cyan underline underline-offset-2 hover:text-white">
             Politykę prywatności
@@ -717,7 +717,7 @@ function Index() {
 
             {/* Mobile: Call przy H1 */}
             <div className="hero-enter hero-enter-delay-5 mt-5 flex justify-center md:hidden">
-              <CTAButton className="px-8 py-4 text-base" />
+              <CTAButton className="px-7 py-3.5 text-[0.9375rem]" />
             </div>
           </div>
 
