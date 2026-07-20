@@ -380,17 +380,17 @@ function ServiceCard({ s, index }: { s: ServiceItem & { icon: typeof Wrench }; i
     <div
       ref={ref}
       className={cn(
-        "card-glass group relative h-full overflow-hidden rounded-xl p-5 text-left transition-smooth md:hover:-translate-y-0.5 md:hover:border-brand-cyan/25 md:hover:shadow-glow",
+        "card-glass group relative h-full overflow-hidden rounded-xl p-5 text-left transition-smooth md:p-6 md:hover:-translate-y-0.5 md:hover:border-brand-cyan/25 md:hover:shadow-glow lg:p-7",
         revealClass,
       )}
       style={{ transitionDelay: `${index * 80}ms` }}
     >
-      <span className="absolute right-4 top-4 text-xs font-semibold tabular-nums text-white/25">{num}</span>
-      <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/8 text-brand-cyan transition-smooth group-hover:scale-110 group-hover:border-brand-cyan/30 group-hover:bg-brand-cyan/10">
-        <Icon className="h-5 w-5" />
+      <span className="absolute right-4 top-4 text-xs font-semibold tabular-nums text-white/25 md:text-sm">{num}</span>
+      <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/8 text-brand-cyan transition-smooth group-hover:scale-110 group-hover:border-brand-cyan/30 group-hover:bg-brand-cyan/10 md:h-11 md:w-11">
+        <Icon className="h-5 w-5 md:h-6 md:w-6" />
       </div>
-      <h3 className="pr-8 text-base font-semibold text-foreground">{s.title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
+      <h3 className="pr-8 text-base font-semibold text-foreground md:text-lg">{s.title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:text-[0.9375rem] md:leading-relaxed">{s.desc}</p>
     </div>
   );
 }
@@ -494,7 +494,9 @@ function ContactCard({
       className={cn(
         "panel-glass flex min-w-0 items-center text-left transition-smooth md:hover:border-white/15",
         stretch ? "h-full flex-1" : "h-full",
-        compact ? "gap-3 rounded-xl p-3.5" : "gap-4 rounded-2xl p-4",
+        compact
+          ? "gap-3.5 rounded-xl p-3.5 md:gap-4 md:rounded-2xl md:p-5"
+          : "gap-4 rounded-2xl p-4 md:p-5",
         isPhone && "border-brand-cyan/20",
         revealClass,
       )}
@@ -503,18 +505,18 @@ function ContactCard({
       <div
         className={cn(
           "flex shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-brand-cyan transition-smooth group-hover:scale-105",
-          compact ? "h-10 w-10" : "h-11 w-11",
+          compact ? "h-11 w-11 md:h-12 md:w-12" : "h-11 w-11 md:h-12 md:w-12",
           isPhone && "border-brand-cyan/25 bg-brand-cyan/10",
         )}
       >
-        <Icon className={compact ? "h-[1.125rem] w-[1.125rem]" : "h-5 w-5"} />
+        <Icon className="h-5 w-5 md:h-6 md:w-6" />
       </div>
       <div className="min-w-0">
-        <p className="text-xs font-medium uppercase tracking-wide text-white/55">{c.title}</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-white/55 md:text-sm">{c.title}</p>
         <p
           className={cn(
-            "mt-0.5 font-semibold text-white leading-snug",
-            compact ? "text-base" : "text-sm",
+            "mt-0.5 font-semibold text-white leading-snug md:mt-1",
+            compact ? "text-base md:text-lg" : "text-sm md:text-lg",
             c.type === "email" ? "break-all leading-snug" : "break-words",
           )}
         >
@@ -551,11 +553,11 @@ function SiteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b border-white/10 backdrop-blur-[10px] transition-smooth",
-        scrolled ? "bg-background/80 shadow-card" : "bg-background/60",
+        "sticky top-0 z-50 border-b border-white/10 bg-background transition-smooth",
+        scrolled && "shadow-card",
       )}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4">
         <a
           href="#top"
           className="flex items-center gap-2"
@@ -619,8 +621,8 @@ function SiteHeader() {
         inert={!menuOpen ? true : undefined}
       >
         <div className="overflow-hidden">
-          <div className="border-b border-white/10 bg-background/98 backdrop-blur-[10px]">
-            <nav className="mx-auto flex max-w-6xl flex-col px-4 py-4 text-left">
+          <div className="border-b border-white/10 bg-background">
+            <nav className="mx-auto flex max-w-7xl flex-col px-4 py-4 text-left">
               {NAV_LINKS.map((link, i) => (
                 <a
                   key={link.href}
@@ -668,7 +670,7 @@ function Index() {
         >
         <div
           className={cn(
-            "relative mx-auto max-w-6xl md:items-center",
+            "relative mx-auto max-w-7xl md:items-center",
             SECTIONS.contactForm ? "md:grid md:grid-cols-2 md:gap-12" : "md:text-center",
           )}
         >
@@ -694,7 +696,7 @@ function Index() {
               {SITE_CITY}
             </p>
 
-            <ul className="hero-enter hero-enter-delay-4 mx-auto mt-4 hidden max-w-xl space-y-2.5 text-left text-base leading-snug text-white/85 md:mx-0 md:block md:text-lg">
+            <ul className="hero-enter hero-enter-delay-4 mx-auto mt-4 hidden max-w-xl space-y-2.5 text-left text-base leading-snug text-white/85 md:mx-0 md:block md:text-lg lg:max-w-2xl lg:text-xl">
               {HERO_BULLETS.map((bullet) => (
                 <li key={bullet} className="flex items-start gap-2.5">
                   <span
@@ -759,7 +761,7 @@ function Index() {
           glow={{ x: "22%", y: "58%", strength: 0.035 }}
         >
           <MobileCarousel dark items={services} renderItem={(s) => <ServiceCard s={s} index={services.indexOf(s)} />} />
-          <div className="hidden md:grid grid-cols-3 gap-5">
+          <div className="hidden md:grid grid-cols-3 gap-5 lg:gap-6">
             {services.map((s, i) => (
               <ServiceCard key={s.title} s={s} index={i} />
             ))}
@@ -834,7 +836,7 @@ function Index() {
           style={{ "--glow-x": "16%", "--glow-y": "55%", "--glow-strength": "0.05" } as CSSProperties}
           aria-hidden
         />
-        <div className="relative mx-auto max-w-6xl">
+        <div className="relative mx-auto max-w-7xl">
           <div id="wycena" className="scroll-mt-24">
             <div className="panel-glass rounded-2xl p-5 md:hidden">
               <Reveal className="text-center">
@@ -877,10 +879,10 @@ function Index() {
             <div className="panel-glass mx-auto hidden max-w-4xl rounded-2xl p-5 md:block md:p-8 lg:p-10">
               <Reveal className="text-center">
                 <p className="section-eyebrow">{SECTION_TITLES.contactEyebrow}</p>
-                <h2 className="mt-1.5 text-4xl font-bold tracking-tight text-white">
+                <h2 className="mt-1.5 text-4xl font-bold tracking-tight text-white lg:text-[2.75rem]">
                   {SECTION_TITLES.contactTitle}
                 </h2>
-                <p className="mt-1.5 text-base leading-relaxed text-white/75">
+                <p className="mt-1.5 text-base leading-relaxed text-white/75 lg:text-lg">
                   {SECTION_TITLES.contactSubtitle}
                 </p>
               </Reveal>
@@ -917,7 +919,7 @@ function Index() {
 
       {/* FOOTER */}
       <footer className="relative px-4 pt-10 pb-24 text-foreground md:pb-8">
-        <div className="mx-auto max-w-6xl text-center text-sm text-muted-foreground">
+        <div className="mx-auto max-w-7xl text-center text-sm text-muted-foreground">
           <p className="font-bold text-foreground">{SITE_NAME} · {FOOTER_TAGLINE}</p>
           <p className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <a href={PHONE_HREF} className="inline-flex items-center gap-1.5 transition-smooth hover:text-foreground">
@@ -997,7 +999,7 @@ function Section({
       {eyebrow && <p className="section-eyebrow">{eyebrow}</p>}
       <h2
         className={cn(
-          "text-2xl font-bold tracking-tight md:text-4xl",
+          "text-2xl font-bold tracking-tight md:text-4xl lg:text-[2.75rem]",
           panel ? "text-white" : "text-foreground",
           eyebrow && "mt-1.5",
         )}
@@ -1007,7 +1009,7 @@ function Section({
       {subtitle && (
         <p
           className={cn(
-            "text-sm leading-relaxed md:text-base",
+            "text-sm leading-relaxed md:text-base lg:text-lg",
             panel ? "text-white/75" : "text-muted-foreground",
             eyebrow ? "mt-1.5" : "mt-2",
           )}
@@ -1037,7 +1039,7 @@ function Section({
           aria-hidden
         />
       )}
-      <div className="relative mx-auto max-w-6xl">
+      <div className="relative mx-auto max-w-7xl">
         {panel ? (
           <div className="panel-glass rounded-2xl p-5 text-center md:p-8 lg:p-10">
             {header}

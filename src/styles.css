@@ -311,6 +311,12 @@
     text-transform: uppercase;
   }
 
+  @media (min-width: 1024px) {
+    .section-eyebrow {
+      font-size: 0.9375rem;
+    }
+  }
+
   .btn-cta {
     display: inline-flex;
     align-items: center;
