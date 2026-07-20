@@ -290,7 +290,7 @@ function LeadForm({
               )}
               aria-hidden
             />
-            {moreOpen ? "Mniej" : "Więcej (imię, usługa)"}
+            {moreOpen ? "Mniej" : "Więcej opcji"}
           </button>
 
           <div

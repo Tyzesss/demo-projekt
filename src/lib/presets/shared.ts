@@ -32,8 +32,8 @@ export const DEFAULT_SECTION_TITLES: SectionTitles = {
   contactEyebrow: "Kontakt",
   contactTitle: "Skontaktuj się z nami",
   contactSubtitle: "Zadzwoń, napisz lub zostaw numer.",
-  formHeadline: "Zostaw numer",
-  formSubline: "Oddzwonimy do Ciebie.",
+  formHeadline: "Zostaw nam swój numer",
+  formSubline: "Oddzwonimy do Ciebie",
 };
 
 export const DEFAULT_HOW_IT_WORKS_STEPS: HowItWorksStep[] = [
