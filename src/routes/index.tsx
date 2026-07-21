@@ -633,9 +633,11 @@ function SiteHeader() {
                   const id = link.href.replace("#", "");
                   const target = document.getElementById(id);
                   if (!target) return;
-                  // Po zamknięciu overlay — scroll z poprawnym offsetem pod sticky header
                   window.setTimeout(() => {
-                    target.scrollIntoView({ behavior: "smooth", block: "start" });
+                    const headerOffset = 64; // równo pod sticky header
+                    const top =
+                      target.getBoundingClientRect().top + window.scrollY - headerOffset;
+                    window.scrollTo({ top, behavior: "smooth" });
                     history.replaceState(null, "", link.href);
                   }, 50);
                 }}
