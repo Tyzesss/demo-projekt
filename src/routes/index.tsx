@@ -553,7 +553,7 @@ function SiteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b border-white/10 bg-background transition-smooth",
+        "relative sticky top-0 z-50 border-b border-white/10 bg-background transition-smooth",
         scrolled && "shadow-card",
       )}
     >
@@ -614,32 +614,41 @@ function SiteHeader() {
       <div
         id="mobile-nav"
         className={cn(
-          "grid md:hidden transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
-          menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+          "absolute inset-x-0 top-full z-50 grid border-b border-white/10 bg-background md:hidden transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr] border-transparent",
         )}
         aria-hidden={!menuOpen}
         inert={!menuOpen ? true : undefined}
       >
         <div className="overflow-hidden">
-          <div className="border-b border-white/10 bg-background">
-            <nav className="mx-auto flex max-w-7xl flex-col px-4 py-4 text-left">
-              {NAV_LINKS.map((link, i) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  tabIndex={menuOpen ? undefined : -1}
-                  onClick={() => setMenuOpen(false)}
-                  className={cn(
-                    "border-b border-white/10 py-3 text-base font-semibold text-foreground transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] last:border-0 hover:text-brand-cyan",
-                    menuOpen ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0",
-                  )}
-                  style={{ transitionDelay: menuOpen ? `${80 + i * 40}ms` : "0ms" }}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
-          </div>
+          <nav className="mx-auto flex max-w-7xl flex-col px-4 py-4 text-left">
+            {NAV_LINKS.map((link, i) => (
+              <a
+                key={link.href}
+                href={link.href}
+                tabIndex={menuOpen ? undefined : -1}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMenuOpen(false);
+                  const id = link.href.replace("#", "");
+                  const target = document.getElementById(id);
+                  if (!target) return;
+                  // Po zamknięciu overlay — scroll z poprawnym offsetem pod sticky header
+                  window.setTimeout(() => {
+                    target.scrollIntoView({ behavior: "smooth", block: "start" });
+                    history.replaceState(null, "", link.href);
+                  }, 50);
+                }}
+                className={cn(
+                  "border-b border-white/10 py-3 text-base font-semibold text-foreground transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] last:border-0 hover:text-brand-cyan",
+                  menuOpen ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0",
+                )}
+                style={{ transitionDelay: menuOpen ? `${80 + i * 40}ms` : "0ms" }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
         </div>
       </div>
     </header>
