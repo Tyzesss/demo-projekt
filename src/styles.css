@@ -653,6 +653,44 @@
   }
 }
 
+/* Mobile partners — seamless horizontal strip (replaces wrapping name cloud) */
+.partners-marquee {
+  position: relative;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.partners-marquee__track {
+  display: flex;
+  width: max-content;
+  gap: 0.75rem;
+  padding-block: 0.15rem;
+  animation: partners-marquee-scroll 28s linear infinite;
+}
+
+.partners-marquee__item {
+  flex: none;
+  border: 1px solid color-mix(in oklch, white 12%, transparent);
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: color-mix(in oklch, white 82%, transparent);
+  background: color-mix(in oklch, white 4%, transparent);
+}
+
+@keyframes partners-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .hero-enter {
@@ -664,6 +702,19 @@
 
   .hero-photo {
     animation: none !important;
+  }
+
+  .partners-marquee__track {
+    animation: none;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .partners-marquee__track::-webkit-scrollbar {
+    display: none;
   }
 
   .hover-lift:hover {

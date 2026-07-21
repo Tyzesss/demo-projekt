@@ -539,6 +539,66 @@ function ContactCard({
   );
 }
 
+/** Sticky bar is h-16; small breathing room under the content block. */
+const HEADER_HEIGHT = 64;
+const SECTION_GAP = 20;
+
+let navScrollRaf = 0;
+
+function easeOutCubic(t: number) {
+  return 1 - (1 - t) ** 3;
+}
+
+/** Own tween — avoids CSS `scroll-behavior` / native hash fights on mobile. */
+function animateScrollTo(targetY: number, durationMs = 500) {
+  const startY = window.scrollY;
+  const distance = targetY - startY;
+  if (Math.abs(distance) < 1) return;
+
+  if (navScrollRaf) cancelAnimationFrame(navScrollRaf);
+
+  const root = document.documentElement;
+  const prevBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = "auto";
+
+  const startTime = performance.now();
+  const tick = (now: number) => {
+    const t = Math.min(1, (now - startTime) / durationMs);
+    window.scrollTo(0, startY + distance * easeOutCubic(t));
+    if (t < 1) {
+      navScrollRaf = requestAnimationFrame(tick);
+    } else {
+      root.style.scrollBehavior = prevBehavior;
+      navScrollRaf = 0;
+    }
+  };
+  navScrollRaf = requestAnimationFrame(tick);
+}
+
+function scrollToSection(href: string) {
+  const id = href.replace(/^#/, "");
+  if (!id) return;
+  const section = document.getElementById(id);
+  if (!section) return;
+
+  // Content wrapper (skips section padding void under the navbar).
+  const content =
+    section.querySelector<HTMLElement>(":scope > .relative") ?? section;
+
+  const header = document.querySelector("header");
+  const headerH = header?.getBoundingClientRect().height ?? HEADER_HEIGHT;
+  const targetY = Math.max(
+    0,
+    content.getBoundingClientRect().top + window.scrollY - headerH - SECTION_GAP,
+  );
+
+  animateScrollTo(targetY);
+
+  if (window.location.hash !== href) {
+    history.replaceState(null, "", href);
+  }
+}
+
 function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -550,107 +610,157 @@ function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    document.body.dataset.mobileNavOpen = menuOpen ? "true" : "false";
+    return () => {
+      delete document.body.dataset.mobileNavOpen;
+    };
+  }, [menuOpen]);
+
+  const goTo = (href: string) => {
+    setMenuOpen(false);
+    // Measure only after menu close has painted — same path for hero and mid-page.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        scrollToSection(href);
+      });
+    });
+  };
+
   return (
     <header
       className={cn(
-        "relative sticky top-0 z-50 border-b border-white/10 bg-background transition-smooth",
+        "sticky top-0 z-50 border-b border-white/10 bg-background transition-smooth",
         scrolled && "shadow-card",
       )}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4">
-        <a
-          href="#top"
-          className="flex items-center gap-2"
-          onClick={() => setMenuOpen(false)}
-        >
-          <SiteLogo />
-        </a>
-
-        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-muted-foreground transition-smooth hover:text-brand-cyan hover:underline hover:underline-offset-4"
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-2">
+      <div className="relative z-[60] bg-background">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4">
           <a
-            href={PHONE_HREF}
-            className="btn-cta max-md:!hidden md:inline-flex px-5 py-2.5 text-sm"
+            href="#top"
+            className="flex items-center gap-2"
+            onClick={(e) => {
+              e.preventDefault();
+              goTo("#top");
+            }}
           >
-            <Phone className="h-4 w-4" /> Zadzwoń
+            <SiteLogo />
           </a>
-          <button
-            type="button"
-            onClick={() => setMenuOpen((open) => !open)}
-            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-smooth hover:bg-white/10 md:hidden"
-            aria-expanded={menuOpen}
-            aria-controls="mobile-nav"
-            aria-label={menuOpen ? "Zamknij menu" : "Otwórz menu"}
-          >
-            <Menu
-              className={cn(
-                "h-6 w-6 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                menuOpen ? "rotate-90 scale-75 opacity-0" : "rotate-0 scale-100 opacity-100",
-              )}
-              aria-hidden
-            />
-            <X
-              className={cn(
-                "absolute h-6 w-6 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                menuOpen ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-75 opacity-0",
-              )}
-              aria-hidden
-            />
-          </button>
-        </div>
-      </div>
 
-      <div
-        id="mobile-nav"
-        className={cn(
-          "absolute inset-x-0 top-full z-50 grid border-b border-white/10 bg-background md:hidden transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
-          menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr] border-transparent",
-        )}
-        aria-hidden={!menuOpen}
-        inert={!menuOpen ? true : undefined}
-      >
-        <div className="overflow-hidden">
-          <nav className="mx-auto flex max-w-7xl flex-col px-4 py-4 text-left">
-            {NAV_LINKS.map((link, i) => (
+          <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+            {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                tabIndex={menuOpen ? undefined : -1}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setMenuOpen(false);
-                  const id = link.href.replace("#", "");
-                  const target = document.getElementById(id);
-                  if (!target) return;
-                  window.setTimeout(() => {
-                    const headerOffset = 64; // równo pod sticky header
-                    const top =
-                      target.getBoundingClientRect().top + window.scrollY - headerOffset;
-                    window.scrollTo({ top, behavior: "smooth" });
-                    history.replaceState(null, "", link.href);
-                  }, 50);
-                }}
-                className={cn(
-                  "border-b border-white/10 py-3 text-base font-semibold text-foreground transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] last:border-0 hover:text-brand-cyan",
-                  menuOpen ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0",
-                )}
-                style={{ transitionDelay: menuOpen ? `${80 + i * 40}ms` : "0ms" }}
+                className="text-muted-foreground transition-smooth hover:text-brand-cyan hover:underline hover:underline-offset-4"
               >
                 {link.label}
               </a>
             ))}
           </nav>
+
+          <div className="flex items-center gap-2">
+            <a
+              href={PHONE_HREF}
+              className="btn-cta max-md:!hidden md:inline-flex px-5 py-2.5 text-sm"
+            >
+              <Phone className="h-4 w-4" /> Zadzwoń
+            </a>
+            <button
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-smooth hover:bg-white/10 md:hidden"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav"
+              aria-label={menuOpen ? "Zamknij menu" : "Otwórz menu"}
+            >
+              <Menu
+                className={cn(
+                  "h-5 w-5 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                  menuOpen ? "rotate-90 scale-75 opacity-0" : "rotate-0 scale-100 opacity-100",
+                )}
+                aria-hidden
+              />
+              <X
+                className={cn(
+                  "absolute h-5 w-5 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                  menuOpen ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-75 opacity-0",
+                )}
+                aria-hidden
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Scrim starts under the bar so navbar color stays correct. */}
+      <button
+        type="button"
+        tabIndex={menuOpen ? 0 : -1}
+        aria-label="Zamknij menu"
+        onClick={() => setMenuOpen(false)}
+        className={cn(
+          "fixed inset-x-0 bottom-0 top-16 z-40 bg-black/50 transition-opacity duration-300 md:hidden",
+          menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+        )}
+      />
+
+      {/* Floating panel — detached from navbar */}
+      <div
+        id="mobile-nav"
+        className={cn(
+          "absolute left-3 right-3 top-[calc(100%+0.5rem)] z-50 origin-top md:hidden",
+          "rounded-2xl border border-white/10 bg-background p-2",
+          "shadow-[0_20px_50px_-20px_oklch(0_0_0/0.65)]",
+          "transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          menuOpen
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-1 opacity-0",
+        )}
+        aria-hidden={!menuOpen}
+        inert={!menuOpen ? true : undefined}
+      >
+        <nav className="flex flex-col gap-0.5">
+          {NAV_LINKS.map((link, i) => (
+            <a
+              key={link.href}
+              href={link.href}
+              tabIndex={menuOpen ? undefined : -1}
+              onClick={(e) => {
+                e.preventDefault();
+                goTo(link.href);
+              }}
+              className={cn(
+                "rounded-xl px-3.5 py-2.5 text-[0.95rem] font-semibold tracking-tight text-white/90",
+                "transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                "hover:bg-white/5 hover:text-brand-cyan active:bg-white/8",
+                menuOpen ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0",
+              )}
+              style={{ transitionDelay: menuOpen ? `${50 + i * 30}ms` : "0ms" }}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+        <div className="mt-1.5 border-t border-white/10 p-1.5 pt-2.5">
+          <a
+            href={PHONE_HREF}
+            tabIndex={menuOpen ? undefined : -1}
+            className="btn-cta flex w-full items-center justify-center gap-2 py-2.5 text-sm"
+            onClick={() => setMenuOpen(false)}
+          >
+            <Phone className="h-4 w-4 shrink-0" />
+            <span>Zadzwoń · {PHONE_DISPLAY}</span>
+          </a>
         </div>
       </div>
     </header>
@@ -766,6 +876,7 @@ function Index() {
 
         <Section
           id="uslugi"
+          className="max-md:pb-6"
           eyebrow={SECTION_TITLES.servicesEyebrow}
           title={SECTION_TITLES.servicesTitle}
           subtitle={SERVICES_SECTION_SUBTITLE}
@@ -779,7 +890,7 @@ function Index() {
           </div>
 
           {SECTIONS.partners ? (
-            <div className="mt-8">
+            <div className="mt-7 pb-3 md:mt-8 md:pb-0">
               <PartnersSection />
             </div>
           ) : null}

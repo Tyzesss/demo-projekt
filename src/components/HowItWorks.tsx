@@ -109,7 +109,7 @@ export function HowItWorks() {
   return (
     <section
       id="jak-dzialamy"
-      className="relative scroll-mt-24 overflow-hidden px-4 py-10 text-foreground md:py-16"
+      className="relative scroll-mt-24 overflow-hidden px-4 pt-6 pb-10 text-foreground md:py-16"
     >
       <div
         className="section-glow section-glow--cyan pointer-events-none"
